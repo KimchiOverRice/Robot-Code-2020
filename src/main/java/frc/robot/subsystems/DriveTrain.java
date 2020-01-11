@@ -7,14 +7,16 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ExampleSubsystem extends SubsystemBase {
-  /**
-   * Creates a new ExampleSubsystem.
-   */
-  public ExampleSubsystem() {
+public class DriveTrain extends SubsystemBase {
+  public CANSparkMax testMotor = new CANSparkMax(1, MotorType.kBrushless);
 
+  public DriveTrain() {
+  
   }
 
   @Override
