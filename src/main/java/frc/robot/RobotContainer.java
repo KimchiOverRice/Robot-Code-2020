@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,9 +21,18 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public final DriveTrain driveTrain = new DriveTrain();
+  final DriveTrain driveTrain = new DriveTrain();
 
+  Joystick joystickLeft = new Joystick(1);
+  Joystick joystickRight = new Joystick(2);
 
+  public double getValueOfLeftY(){
+    return joystickLeft.getY();
+  }
+
+  public double getValueOfRightY(){
+    return joystickRight.getY();
+  }
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
