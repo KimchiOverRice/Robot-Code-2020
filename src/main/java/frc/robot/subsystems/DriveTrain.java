@@ -28,7 +28,7 @@ public class DriveTrain extends SubsystemBase {
     middleRight.follow(frontRight);
     backRight.follow(frontRight);
 
-    frontRight.setInverted(true);
+    frontLeft.setInverted(true);
   }
 
   public void setSpeed(double leftSpeed, double rightSpeed){

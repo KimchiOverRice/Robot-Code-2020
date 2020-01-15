@@ -7,11 +7,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -22,9 +29,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   final DriveTrain driveTrain = new DriveTrain();
+  final Shooter shooter = new Shooter();
 
   Joystick joystickLeft = new Joystick(1);
   Joystick joystickRight = new Joystick(2);
+
+  private NetworkTableEntry sliderSpeed;
 
   public double getValueOfLeftY(){
     return joystickLeft.getY();
@@ -34,10 +44,23 @@ public class RobotContainer {
     return joystickRight.getY();
   }
 
+  public double getSpeedFromSlider(){
+    return sliderSpeed.getDouble(0.5);
+  }
+
+
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    sliderSpeed = Shuffleboard.getTab("Testing")
+    .add("Slider Speed", 1)
+    .withWidget("Number Slider")
+    .withPosition(1, 1)
+    .withSize(2, 1)
+    .getEntry();
+    driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
+    shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -50,7 +73,6 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
