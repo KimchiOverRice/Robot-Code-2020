@@ -7,19 +7,33 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
   /**
    * Creates a new Shooter.
    */
-  final CANSparkMax testMotor = new CANSparkMax(7, MotorType.kBrushless);
+  final CANSparkMax testMotor = new CANSparkMax(1, MotorType.kBrushless);
+
+  private CANEncoder encoder;
+
   public Shooter() {
     testMotor.enableVoltageCompensation(12);
+    encoder = testMotor.getEncoder();
+    Shuffleboard.getTab("Testing").add("Velocity", encoder);
   }
+
+  public double getVelocity(){
+    return encoder.getVelocity();
+  }
+
   public void setSpeed(double speed)
   {
     testMotor.set(speed);
@@ -27,6 +41,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Shooter Velocity", getVelocity());
   }
 }

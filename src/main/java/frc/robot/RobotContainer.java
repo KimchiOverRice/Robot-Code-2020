@@ -54,11 +54,12 @@ public class RobotContainer {
    */
   public RobotContainer() {
     sliderSpeed = Shuffleboard.getTab("Testing")
-    .add("Slider Speed", 1)
+    .add("Slider Speed", 0)
     .withWidget("Number Slider")
     .withPosition(1, 1)
     .withSize(2, 1)
     .getEntry();
+
     driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
     shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
     // Configure the button bindings
