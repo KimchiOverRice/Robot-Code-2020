@@ -27,7 +27,7 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     testMotor.enableVoltageCompensation(12);
     encoder = testMotor.getEncoder();
-    Shuffleboard.getTab("Testing").add("Velocity", encoder);
+    //Shuffleboard.getTab("Testing").add("Velocity", encoder);
   }
 
   public double getVelocity(){
