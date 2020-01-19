@@ -20,12 +20,12 @@ public class Shooter extends SubsystemBase {
   /**
    * Creates a new Shooter.
    */
-  final CANSparkMax testMotor = new CANSparkMax(1, MotorType.kBrushless);
+  final CANSparkMax testMotor = new CANSparkMax(1, MotorType.kBrushed);
 
   private CANEncoder encoder;
 
   public Shooter() {
-    testMotor.enableVoltageCompensation(12);
+    //testMotor.enableVoltageCompensation(12);
     encoder = testMotor.getEncoder();
     //Shuffleboard.getTab("Testing").add("Velocity", encoder);
   }

@@ -22,16 +22,13 @@ public class TurnToTarget extends CommandBase {
   DriveTrain driveTrain;
   double tx, speedConst;
   NetworkTableEntry proportionSlider, minSpeedSlider;
-  static double DEFAULT_SPEED_CONST, DEFAULT_MIN_CONST;
+  static double DEFAULT_SPEED_CONST = 0.01, DEFAULT_MIN_CONST = 0;
 
 
   public TurnToTarget(DriveTrain drive) {
+    
     addRequirements(drive);
     driveTrain = drive;
-  }
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
     proportionSlider = Shuffleboard.getTab("Testing")
     .add("Turning Constant", DEFAULT_SPEED_CONST)
     .withWidget("Number Slider")
@@ -40,8 +37,14 @@ public class TurnToTarget extends CommandBase {
     .add("Minimum Speed", DEFAULT_MIN_CONST)
     .withWidget("Number Slider")
     .getEntry();
-
-    Limelight.setLedMode(LightMode.eOn);
+  }
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+   
+    System.out.println("Starting");
+    //Limelight.setLedMode(LightMode.eOn);
+    SmartDashboard.putBoolean("Turning", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -57,8 +60,9 @@ public class TurnToTarget extends CommandBase {
       speed = speed - minSpeedSlider.getDouble(DEFAULT_MIN_CONST);
     }
     
-    driveTrain.setSpeed(-speed, speed);
-    
+    driveTrain.setSpeed(speed, -speed);
+    SmartDashboard.putNumber("Speed", speed);
+
 
 
   }
@@ -67,7 +71,8 @@ public class TurnToTarget extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     driveTrain.setSpeed(0,0);
-    Limelight.setLedMode(LightMode.eOff);
+    SmartDashboard.putBoolean("Turning", false);
+    //Limelight.setLedMode(LightMode.eOff);
   }
 
   // Returns true when the command should end.

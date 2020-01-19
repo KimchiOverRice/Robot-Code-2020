@@ -9,11 +9,11 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Limelight extends SubsystemBase {
+public class Cerealizer extends SubsystemBase {
   /**
-   * Creates a new Limelight.
+   * Creates a new cerealizer.
    */
-  public Limelight() {
+  public Cerealizer() {
 
   }
 

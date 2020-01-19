@@ -11,20 +11,24 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.commands.TurnToTarget;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link Robot} periodic methods (other than the
+ * scheduler calls). Instead, the structure of the robot (including subsystems,
+ * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
@@ -33,37 +37,41 @@ public class RobotContainer {
 
   Joystick joystickLeft = new Joystick(1);
   Joystick joystickRight = new Joystick(2);
+  JoystickButton joystickbuttonRight = new JoystickButton(joystickRight, 2);
+  TurnToTarget turnToTarget = new TurnToTarget(driveTrain);
+  private NetworkTableEntry shooterSpeedDisplay;
 
-  private NetworkTableEntry sliderSpeed;
+  private NetworkTableEntry shooterSpeedSlider;
 
-  public double getValueOfLeftY(){
+  public double getValueOfLeftY() {
     return joystickLeft.getY();
   }
 
-  public double getValueOfRightY(){
+  public double getValueOfRightY() {
     return joystickRight.getY();
   }
 
-  public double getSpeedFromSlider(){
-    return sliderSpeed.getDouble(0.5);
+  public double getSpeedFromSlider() {
+    return shooterSpeedSlider.getDouble(0.5);
   }
 
-
   /**
-   * The container for the robot.  Contains subsystems, OI devices, and commands.
+   * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    sliderSpeed = Shuffleboard.getTab("Testing")
-    .add("Slider Speed", 0)
-    .withWidget("Number Slider")
-    .withPosition(1, 1)
-    .withSize(2, 1)
-    .getEntry();
+    shooterSpeedSlider = Shuffleboard.getTab("Testing").add("Shooter Speed", 0).withWidget("Number Slider").withPosition(1, 1)
+        .withSize(2, 1).getEntry();
+    shooterSpeedDisplay = Shuffleboard.getTab("Testing").add("Shooter Speed Display", 0).withWidget(BuiltInWidgets.kTextView).getEntry();  
 
-    driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
+    driveTrain.setDefaultCommand(
+        new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
     shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
     // Configure the button bindings
     configureButtonBindings();
+  }
+
+  public void setShooterSpeedDisplay(double speed){
+    shooterSpeedDisplay.setDouble(speed);
   }
 
   /**
@@ -73,7 +81,10 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    joystickbuttonRight.whenPressed(turnToTarget);
   }
+
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
