@@ -15,31 +15,31 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
-  /*final CANSparkMax frontLeft = new CANSparkMax(7, MotorType.kBrushless);
-  final CANSparkMax frontRight = new CANSparkMax(2, MotorType.kBrushless);
-  final CANSparkMax middleLeft = new CANSparkMax(3, MotorType.kBrushless);
-  final CANSparkMax middleRight = new CANSparkMax(4, MotorType.kBrushless);
-  final CANSparkMax backLeft = new CANSparkMax(5, MotorType.kBrushless);
-  final CANSparkMax backRight = new CANSparkMax(6, MotorType.kBrushless);*/
+  final CANSparkMax frontLeft = new CANSparkMax(1, MotorType.kBrushless);
+  final CANSparkMax frontRight = new CANSparkMax(4, MotorType.kBrushless);
+  final CANSparkMax middleLeft = new CANSparkMax(2, MotorType.kBrushless);
+  final CANSparkMax middleRight = new CANSparkMax(5, MotorType.kBrushless);
+  final CANSparkMax backLeft = new CANSparkMax(3, MotorType.kBrushless);
+  //final CANSparkMax backRight = new CANSparkMax(6, MotorType.kBrushless);
 
   DifferentialDrive driveTrain;
 
   public DriveTrain() {
-    /*middleLeft.follow(frontLeft);
+    middleLeft.follow(frontLeft);
     backLeft.follow(frontLeft);
     middleRight.follow(frontRight);
-    backRight.follow(frontRight);
+    //backRight.follow(frontRight);
 
     frontLeft.setInverted(true);
 
     driveTrain = new DifferentialDrive(frontLeft, frontRight);
-    driveTrain.setDeadband(0.1);*/
+    driveTrain.setDeadband(0.1);
   }
 
   public void setSpeed(double leftSpeed, double rightSpeed){
     /*frontRight.set(rightSpeed);
     frontLeft.set(leftSpeed);*/
-    //driveTrain.tankDrive(leftSpeed, rightSpeed);
+    driveTrain.tankDrive(leftSpeed, rightSpeed);
     SmartDashboard.putNumber("Left Speed", leftSpeed);
     SmartDashboard.putNumber("Right Speed", rightSpeed);
 

@@ -20,14 +20,16 @@ public class Shooter extends SubsystemBase {
   /**
    * Creates a new Shooter.
    */
-  final CANSparkMax testMotor = new CANSparkMax(1, MotorType.kBrushed);
+  final CANSparkMax leftWheel = new CANSparkMax(6, MotorType.kBrushless);
+  final CANSparkMax rightWheel = new CANSparkMax(12, MotorType.kBrushless);
 
   private CANEncoder encoder;
 
   public Shooter() {
     //testMotor.enableVoltageCompensation(12);
-    encoder = testMotor.getEncoder();
+    encoder = leftWheel.getEncoder();
     //Shuffleboard.getTab("Testing").add("Velocity", encoder);
+    rightWheel.follow(leftWheel);
   }
 
   public double getVelocity(){
@@ -36,7 +38,8 @@ public class Shooter extends SubsystemBase {
 
   public void setSpeed(double speed)
   {
-    testMotor.set(speed);
+    System.out.println(speed);
+    leftWheel.set(speed);
   }
 
   @Override

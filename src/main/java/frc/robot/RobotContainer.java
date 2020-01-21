@@ -13,8 +13,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.commands.IntakeBall;
+import frc.robot.commands.MoveIntake;
 import frc.robot.commands.TurnToTarget;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -34,6 +37,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   final DriveTrain driveTrain = new DriveTrain();
   final Shooter shooter = new Shooter();
+  final Intake intake = new Intake();
 
   Joystick joystickLeft = new Joystick(1);
   Joystick joystickRight = new Joystick(2);
@@ -82,8 +86,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     joystickbuttonRight.whenPressed(turnToTarget);
+    new JoystickButton(joystickRight, 5).whenPressed(new MoveIntake (intake, MoveIntake.Tilt.UP));
+    new JoystickButton(joystickRight, 3).whenPressed(new MoveIntake (intake, MoveIntake.Tilt.DOWN));
+    new JoystickButton(joystickRight, 7).whileHeld(new IntakeBall (intake));
   }
-
 
 
   /**
