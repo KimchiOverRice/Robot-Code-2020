@@ -11,6 +11,8 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +25,9 @@ public class Shooter extends SubsystemBase {
    */
   final CANSparkMax leftWheel = new CANSparkMax(Constants.leftWheels, MotorType.kBrushless);
   final CANSparkMax rightWheel = new CANSparkMax(Constants.rightWheels, MotorType.kBrushless);
-
+  final Compressor squeezer = new Compressor(0);
+  final DoubleSolenoid leftSolenoid = new DoubleSolenoid(1,2);
+  final DoubleSolenoid rightSolenoid = new DoubleSolenoid(0,3);
   private CANEncoder encoder;
 
   public Shooter() {
@@ -47,4 +51,10 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Shooter Velocity", getVelocity());
   }
+
+  public void leftClosed() {
+    leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  //public void rightClosed
 }
