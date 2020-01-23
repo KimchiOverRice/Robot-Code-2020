@@ -20,8 +20,9 @@ public class Intake extends SubsystemBase {
   /**
    * Creates a new Intake.
    */
-  final CANSparkMax arm = new CANSparkMax(7, MotorType.kBrushless);
+  final CANSparkMax arm = new CANSparkMax(12, MotorType.kBrushless);
   final CANSparkMax roller = new CANSparkMax(8, MotorType.kBrushless);
+  
   private CANEncoder armEncoder;
 
   public Intake() {
