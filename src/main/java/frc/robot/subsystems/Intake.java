@@ -15,13 +15,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /**
    * Creates a new Intake.
    */
-  final CANSparkMax arm = new CANSparkMax(7, MotorType.kBrushless);
-  final CANSparkMax roller = new CANSparkMax(8, MotorType.kBrushless);
+  final CANSparkMax arm = new CANSparkMax(Constants.arm, MotorType.kBrushless);
+  final CANSparkMax roller = new CANSparkMax(Constants.rollers, MotorType.kBrushless);
   private CANEncoder armEncoder;
 
   public Intake() {

@@ -15,13 +15,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
   /**
    * Creates a new Shooter.
    */
-  final CANSparkMax leftWheel = new CANSparkMax(6, MotorType.kBrushless);
-  final CANSparkMax rightWheel = new CANSparkMax(12, MotorType.kBrushless);
+  final CANSparkMax leftWheel = new CANSparkMax(Constants.leftWheels, MotorType.kBrushless);
+  final CANSparkMax rightWheel = new CANSparkMax(Constants.rightWheels, MotorType.kBrushless);
 
   private CANEncoder encoder;
 

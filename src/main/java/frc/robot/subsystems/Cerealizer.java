@@ -11,13 +11,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Cerealizer extends SubsystemBase {
   /**
    * Creates a new cerealizer.
    *
    */
-  final CANSparkMax inAndOut = new CANSparkMax(9, MotorType.kBrushless);
+  final CANSparkMax inAndOut = new CANSparkMax(Constants.inAndOut, MotorType.kBrushless);
   final CANSparkMax rotation = new CANSparkMax(10, MotorType.kBrushless);
 
   public Cerealizer() {
