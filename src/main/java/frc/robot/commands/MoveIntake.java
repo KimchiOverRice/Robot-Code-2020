@@ -47,11 +47,11 @@ public class MoveIntake extends CommandBase {
   @Override
   public void execute() {
     currentPosition = intake.getTurns();
-    offsetPosition = currentPosition - targetPosition;
+    offsetPosition = targetPosition - currentPosition;
     if(offsetPosition < 0){
-      intake.setArmSpeed((offsetPosition)/200 - kMinimum);
+      intake.setArmSpeed((offsetPosition)/400 - kMinimum);
     }else if (offsetPosition > 0){
-      intake.setArmSpeed((offsetPosition)/200 + kMinimum);
+      intake.setArmSpeed((offsetPosition)/400 + kMinimum);
     }
     SmartDashboard.putNumber("Off set position", offsetPosition);
     
@@ -67,7 +67,7 @@ public class MoveIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return offsetPosition == 0;
+    return offsetPosition <= 10 && offsetPosition >= -10;
   }
 
 }

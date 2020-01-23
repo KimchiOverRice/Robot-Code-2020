@@ -32,8 +32,16 @@ public final class Constants {
     //shooter
     public static int leftWheels = 11;
     public static int rightWheels = 12;
+    public static int leftSolenoidP1 = 0;
+    public static int leftSolenoidP2 = 1;
+    public static int rightSolenoidP1 = 2;
+    public static int rightSolenoidP2 = 3;
+    public static int compressor = 0;
 
     //serializer
     public static int inAndOut = 9;
     public static int rotation = 10;
+    public static int breakBeamIn = 0;
+    public static int breakBeamOut = 1;
+    public static int positionZero = 2;
 }

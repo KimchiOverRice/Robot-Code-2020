@@ -70,6 +70,8 @@ public class RobotContainer {
     driveTrain.setDefaultCommand(
         new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
     shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
+
+    intake.setEncoder();
     // Configure the button bindings
     configureButtonBindings();
   }

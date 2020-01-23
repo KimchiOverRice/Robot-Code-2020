@@ -20,14 +20,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-  /**
-   * Creates a new Shooter.
-   */
   final CANSparkMax leftWheel = new CANSparkMax(Constants.leftWheels, MotorType.kBrushless);
   final CANSparkMax rightWheel = new CANSparkMax(Constants.rightWheels, MotorType.kBrushless);
-  final Compressor squeezer = new Compressor(0);
-  final DoubleSolenoid leftSolenoid = new DoubleSolenoid(1,2);
-  final DoubleSolenoid rightSolenoid = new DoubleSolenoid(0,3);
+  final Compressor squeezer = new Compressor(Constants.compressor);
+  final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.leftSolenoidP1,Constants.leftSolenoidP2);
+  final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.rightSolenoidP1,Constants.rightSolenoidP2);
   private CANEncoder encoder;
 
   public Shooter() {
@@ -52,9 +49,13 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Velocity", getVelocity());
   }
 
-  public void leftClosed() {
+  public void hoodDown() {
     leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+    rightSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
-  //public void rightClosed
+  public void hoodUp(){
+    leftSolenoid.set(DoubleSolenoid.Value.kForward);
+    rightSolenoid.set(DoubleSolenoid.Value.kForward);
+  }
 }

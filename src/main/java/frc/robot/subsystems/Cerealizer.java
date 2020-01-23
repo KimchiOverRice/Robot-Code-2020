@@ -7,22 +7,39 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Cerealizer extends SubsystemBase {
-  /**
-   * Creates a new cerealizer.
-   *
-   */
+  boolean[] holesFilled = new boolean[5];
+
   final CANSparkMax inAndOut = new CANSparkMax(Constants.inAndOut, MotorType.kBrushless);
-  final CANSparkMax rotation = new CANSparkMax(10, MotorType.kBrushless);
+  final CANSparkMax rotation = new CANSparkMax(Constants.rotation, MotorType.kBrushless);
+  final CANEncoder rotationEncoder;
+
+  final DigitalInput breakBeamIn = new DigitalInput(Constants.breakBeamIn);
+  final DigitalInput breakBeamOut = new DigitalInput(Constants.breakBeamOut);
+  final DigitalInput positionZero = new DigitalInput(Constants.positionZero);
 
   public Cerealizer() {
+    rotationEncoder = rotation.getEncoder();
+  }
 
+  public void setRotationPosition(double rotationPosition){
+    rotationEncoder.setPosition(rotationPosition);
+  }
+
+  public void setRoationSpeed(double speed){
+    rotation.set(speed);
+  }
+
+  public double getSlotPosition(){
+    return rotationEncoder.getPosition();
   }
 
   @Override
