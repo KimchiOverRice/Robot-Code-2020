@@ -25,7 +25,10 @@ public final class Constants {
     public static int backRight = 6;
 
     //intake
-    public static int arm = 7;
+    public static int intakeLeft1 = 4;
+    public static int intakeLeft2 = 6;
+    public static int intakeRight1 = 5;
+    public static int intakeRight2 = 7;
     public static int rollers = 8;
 
 
@@ -41,7 +44,9 @@ public final class Constants {
     //serializer
     public static int inAndOut = 9;
     public static int rotation = 10;
-    public static int breakBeamIn = 0;
+    public static int breakBeamBallInside = 0;
+    public static int breakBeamBallMiddle =3;
+    public static int breakBeamJam = 4;
     public static int breakBeamOut = 1;
     public static int positionZero = 2;
 }

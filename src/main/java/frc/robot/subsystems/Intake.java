@@ -13,6 +13,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,33 +22,34 @@ public class Intake extends SubsystemBase {
   /**
    * Creates a new Intake.
    */
-  final CANSparkMax arm = new CANSparkMax(Constants.arm, MotorType.kBrushless);
+  
+  final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.intakeLeft1, Constants.intakeLeft2);
+  final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.intakeRight1,Constants.intakeRight2);
   final CANSparkMax roller = new CANSparkMax(Constants.rollers, MotorType.kBrushless);
-  private CANEncoder armEncoder;
+ 
 
   public Intake() {
-    armEncoder = arm.getEncoder();
+    
   }
 
-  public void setArmSpeed(double speed){
-    arm.set(speed);
+  public void intakeDown() {
+    leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+    rightSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
+  public void intakeUp(){
+    leftSolenoid.set(DoubleSolenoid.Value.kForward);
+    rightSolenoid.set(DoubleSolenoid.Value.kForward);
+  }
+  
   public void setRollerSpeed(double speed){
     roller.set(speed);
   }
 
-  public double getTurns(){
-    return armEncoder.getPosition();
-  }
-
-  public void setEncoder(){
-    armEncoder.setPosition(0);
-  }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("arm encoder",getTurns());
+    
   }
 }
