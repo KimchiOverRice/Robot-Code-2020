@@ -32,9 +32,11 @@ public class Shooter extends SubsystemBase {
     encoder = leftWheel.getEncoder();
     //Shuffleboard.getTab("Testing").add("Velocity", encoder);
     rightWheel.follow(leftWheel);
+    
   }
 
   public double getVelocity(){
+    System.out.println(encoder.getVelocity());
     return encoder.getVelocity();
   }
 
@@ -42,6 +44,7 @@ public class Shooter extends SubsystemBase {
   {
     System.out.println(speed);
     leftWheel.set(speed);
+    
   }
 
   @Override

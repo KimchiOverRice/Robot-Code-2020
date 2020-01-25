@@ -33,8 +33,8 @@ public final class Constants {
 
 
     //shooter
-    public static int leftWheels = 11;
-    public static int rightWheels = 12;
+    public static int leftWheels = 1;
+    public static int rightWheels = 5;
     public static int leftSolenoidP1 = 0;
     public static int leftSolenoidP2 = 1;
     public static int rightSolenoidP1 = 2;
