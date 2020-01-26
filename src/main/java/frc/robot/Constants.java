@@ -22,7 +22,7 @@ public final class Constants {
     public static int middleLeft = 2;
     public static int middleRight = 5;
     public static int backLeft = 3;
-    public static int backRight = 6;
+    public static int backRight = 6; 
 
     //intake
     public static int intakeLeft1 = 4;
@@ -33,8 +33,8 @@ public final class Constants {
 
 
     //shooter
-    public static int leftWheels = 1;
-    public static int rightWheels = 5;
+    public static int leftWheels = 3;
+    public static int rightWheels = 2;
     public static int leftSolenoidP1 = 0;
     public static int leftSolenoidP2 = 1;
     public static int rightSolenoidP1 = 2;

@@ -11,8 +11,10 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,30 +28,46 @@ public class Shooter extends SubsystemBase {
   final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.leftSolenoidP1,Constants.leftSolenoidP2);
   final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.rightSolenoidP1,Constants.rightSolenoidP2);
   private CANEncoder encoder;
+  NetworkTableEntry rpmDisplay, leftCurrent, rightCurrent, leftVoltage, rightVoltage;
 
   public Shooter() {
+    leftWheel.restoreFactoryDefaults();
+    rightWheel.restoreFactoryDefaults();
+
+    rpmDisplay = Shuffleboard.getTab("Testing").add("Shooter RPM", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+    rightCurrent = Shuffleboard.getTab("Testing").add("Right Current", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+    leftCurrent = Shuffleboard.getTab("Testing").add("Left Current", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+    rightVoltage = Shuffleboard.getTab("Testing").add("Right Voltage", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+    leftVoltage = Shuffleboard.getTab("Testing").add("Left Voltage", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+
+    leftWheel.setSmartCurrentLimit(35);
+    rightWheel.setSmartCurrentLimit(35);
+
     //testMotor.enableVoltageCompensation(12);
     encoder = leftWheel.getEncoder();
+    rightWheel.follow(leftWheel, true);
     //Shuffleboard.getTab("Testing").add("Velocity", encoder);
-    rightWheel.follow(leftWheel);
-    
   }
 
   public double getVelocity(){
-    System.out.println(encoder.getVelocity());
+    //System.out.println(encoder.getVelocity());
     return encoder.getVelocity();
   }
 
   public void setSpeed(double speed)
   {
-    System.out.println(speed);
+    System.out.println(leftWheel.getOutputCurrent());
     leftWheel.set(speed);
-    
+    //rightWheel.set(-speed);
   }
+
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Shooter Velocity", getVelocity());
+    //SmartDashboard.putNumber("Shooter Velocity", getVelocity());
+    rpmDisplay.setDouble(encoder.getVelocity());
+    rightCurrent.setDouble(rightWheel.getOutputCurrent());
+    leftCurrent.setDouble(leftWheel.getOutputCurrent());
   }
 
   public void hoodDown() {
