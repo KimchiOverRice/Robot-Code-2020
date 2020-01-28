@@ -13,7 +13,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -21,7 +25,7 @@ public class Cerealizer extends SubsystemBase {
   boolean[] holesFilled = new boolean[5];
 
   final CANSparkMax inAndOut = new CANSparkMax(Constants.inAndOut, MotorType.kBrushless);
-  final CANSparkMax rotation = new CANSparkMax(Constants.rotation, MotorType.kBrushless);
+  final CANSparkMax cerealMotor = new CANSparkMax(Constants.rotation, MotorType.kBrushless);
   final CANEncoder rotationEncoder;
   private CANPIDController pidController;
 
@@ -31,23 +35,29 @@ public class Cerealizer extends SubsystemBase {
   final DigitalInput breakBeamOut = new DigitalInput(Constants.breakBeamOut);
   final DigitalInput positionZero = new DigitalInput(Constants.positionZero);
 
+  NetworkTableEntry breakSensorDisplay;
   int slotNum;
 
   public Cerealizer() {
-    rotationEncoder = rotation.getEncoder();
-    pidController = rotation.getPIDController();
-    pidController.setP(1);
+    rotationEncoder = cerealMotor.getEncoder();
+    pidController = cerealMotor.getPIDController();
+    setEncoderPosition(0);
+    pidController.setP(0.01);
+    pidController.setI(1e-6);
+    pidController.setD(0);
+    cerealMotor.burnFlash();
+    breakSensorDisplay = Shuffleboard.getTab("Testing").add("break beam sensor 1", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
   }
 
-  public void setRotationPosition(double rotationPosition){
+  public void setEncoderPosition(double rotationPosition){
     rotationEncoder.setPosition(rotationPosition);
   }
 
-  public void setRotationSpeed(double speed){
-    rotation.set(speed);
+  public void stopCerealMotor(){
+    cerealMotor.stopMotor();
   }
 
-  public double getSlotPosition(){
+  public double getRotationPosition(){
     return rotationEncoder.getPosition();
   }
 
@@ -65,5 +75,6 @@ public class Cerealizer extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    breakSensorDisplay.setBoolean(getBeamInside());
   }
 }

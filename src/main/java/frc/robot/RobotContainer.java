@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.IntakeBall;
+import frc.robot.commands.TurnToEmpty;
 import frc.robot.commands.TurnToTarget;
+import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -38,6 +40,7 @@ public class RobotContainer {
   final DriveTrain driveTrain = new DriveTrain();
   final Shooter shooter = new Shooter();
   final Intake intake = new Intake();
+  final Cerealizer cerealizer = new Cerealizer();
 
   Joystick joystickLeft = new Joystick(1);
   Joystick joystickRight = new Joystick(2);
@@ -69,7 +72,7 @@ public class RobotContainer {
 
     driveTrain.setDefaultCommand(
         new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
-    shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
+      shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -86,11 +89,11 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    joystickbuttonRight.whenPressed(turnToTarget);
+   joystickbuttonRight.whenPressed(turnToTarget);
     new JoystickButton(joystickRight, 5).whenPressed(new InstantCommand(intake::intakeDown, intake));
     new JoystickButton(joystickRight, 3).whenPressed(new InstantCommand(intake::intakeUp, intake)); 
     new JoystickButton(joystickRight, 7).whileHeld(new IntakeBall (intake));
-    
+    new JoystickButton(joystickLeft, 1).whenPressed(new TurnToEmpty (cerealizer));
   }
 
 

@@ -29,7 +29,7 @@ public class TurnToEmpty extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    currentPosition = cerealizer.getSlotPosition();
+    currentPosition = cerealizer.getRotationPosition();
     
   }
 
@@ -38,13 +38,13 @@ public class TurnToEmpty extends CommandBase {
   public void execute() {
     targetPosition = currentPosition + numOfRotations;
     cerealizer.setRotations(targetPosition);
-    newPosition = cerealizer.getSlotPosition();
+    newPosition = cerealizer.getRotationPosition();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    cerealizer.setRotationSpeed(0);
+    cerealizer.stopCerealMotor();
   }
 
   // Returns true when the command should end.
