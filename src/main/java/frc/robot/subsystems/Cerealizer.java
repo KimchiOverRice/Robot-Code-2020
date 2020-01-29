@@ -34,11 +34,14 @@ public class Cerealizer extends SubsystemBase {
   final DigitalInput breakBeamJam = new DigitalInput(Constants.breakBeamJam);
   final DigitalInput breakBeamOut = new DigitalInput(Constants.breakBeamOut);
   final DigitalInput positionZero = new DigitalInput(Constants.positionZero);
+  private int holeNumber;
+  private int[] holePositions = {0,10,20,30,40};
 
   NetworkTableEntry breakSensorDisplay;
-  int slotNum;
+  
 
   public Cerealizer() {
+    holeNumber = 0;
     rotationEncoder = cerealMotor.getEncoder();
     pidController = cerealMotor.getPIDController();
     setEncoderPosition(0);
@@ -69,9 +72,27 @@ public class Cerealizer extends SubsystemBase {
     pidController.setReference(rotations, ControlType.kPosition);
   }
 
-  
+  public void incrementHoleNumber(){
+    holeNumber++;
+  }
 
-  
+  public int getHoleNumber(){
+    return holeNumber%5;
+  }
+
+  public int getNextHole(){
+    if(holeNumber<4){
+      return holeNumber + 1;
+    }
+    else{
+      return 0;
+    }
+  }
+
+  public int[] getPositionArray(){
+    return holePositions;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

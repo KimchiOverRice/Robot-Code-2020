@@ -93,7 +93,7 @@ public class RobotContainer {
     new JoystickButton(joystickRight, 5).whenPressed(new InstantCommand(intake::intakeDown, intake));
     new JoystickButton(joystickRight, 3).whenPressed(new InstantCommand(intake::intakeUp, intake)); 
     new JoystickButton(joystickRight, 7).whileHeld(new IntakeBall (intake));
-    new JoystickButton(joystickLeft, 1).whenPressed(new TurnToEmpty (cerealizer));
+    new JoystickButton(joystickRight, 1).whenPressed(new TurnToEmpty (cerealizer));
   }
 
 

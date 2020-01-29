@@ -43,7 +43,7 @@ public final class Constants {
 
     //serializer
     public static int inAndOut = 9;
-    public static int rotation = 10;
+    public static int rotation = 7; // this is 10
     public static int breakBeamBallInside = 0;
     public static int breakBeamBallMiddle =3;
     public static int breakBeamJam = 4;

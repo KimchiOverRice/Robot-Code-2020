@@ -56,7 +56,7 @@ public class Shooter extends SubsystemBase {
 
   public void setSpeed(double speed)
   {
-    System.out.println(leftWheel.getOutputCurrent());
+    //System.out.println(leftWheel.getOutputCurrent());
     leftWheel.set(speed);
     //rightWheel.set(-speed);
   }
