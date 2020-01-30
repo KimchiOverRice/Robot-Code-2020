@@ -7,9 +7,6 @@
 
 package frc.robot.commands;
 
-import com.revrobotics.CANPIDController;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Cerealizer;
@@ -48,26 +45,23 @@ public class TurnToEmpty extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     cerealizer.stopCerealMotor();
-    System.out.println("stopped motor");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    boolean b = Math.abs(newPosition - targetPosition) <= 1 && !cerealizer.holeFull();
-    System.out.println("finished: " + b);
-
     if(Math.abs(newPosition - targetPosition) <= 1){
       cerealizer.stopCerealMotor();
-      Timer.delay(1);
+      //TODO: pause it somehow so it actually stops?
       cerealizer.incrementHoleNumber();
       SmartDashboard.putNumber("hole", cerealizer.getCurrentHole());
-      if(cerealizer.getCurrentHole()==4){
-       cerealizer.incrementNumSpins();
+      if(cerealizer.getCurrentHole() == 4){
+        cerealizer.incrementNumSpins();
       }
+
       if(cerealizer.holeFull()){
         numFull++;
-        if(numFull==5){
+        if(numFull == 4){
           return true;
         }
         targetPosition = cerealizer.getHolePosition(cerealizer.getNextHole());
