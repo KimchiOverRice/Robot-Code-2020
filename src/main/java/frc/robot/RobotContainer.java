@@ -38,8 +38,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   final DriveTrain driveTrain = new DriveTrain();
-  final Shooter shooter = new Shooter();
-  final Intake intake = new Intake();
+  //final Shooter shooter = new Shooter();
+  //final Intake intake = new Intake();
   final Cerealizer cerealizer = new Cerealizer();
 
   Joystick joystickLeft = new Joystick(1);
@@ -71,8 +71,8 @@ public class RobotContainer {
     shooterSpeedDisplay = Shuffleboard.getTab("Testing").add("Shooter Speed Display", 0).withWidget(BuiltInWidgets.kTextView).getEntry();  
 
     driveTrain.setDefaultCommand(
-        new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
-      shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
+       new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
+    // shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -89,10 +89,10 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-   joystickbuttonRight.whenPressed(turnToTarget);
-    new JoystickButton(joystickRight, 5).whenPressed(new InstantCommand(intake::intakeDown, intake));
-    new JoystickButton(joystickRight, 3).whenPressed(new InstantCommand(intake::intakeUp, intake)); 
-    new JoystickButton(joystickRight, 7).whileHeld(new IntakeBall (intake));
+   //joystickbuttonRight.whenPressed(turnToTarget);
+    //new JoystickButton(joystickRight, 5).whenPressed(new InstantCommand(intake::intakeDown, intake));
+    //new JoystickButton(joystickRight, 3).whenPressed(new InstantCommand(intake::intakeUp, intake)); 
+    //new JoystickButton(joystickRight, 7).whileHeld(new IntakeBall (intake));
     new JoystickButton(joystickRight, 1).whenPressed(new TurnToEmpty (cerealizer));
   }
 

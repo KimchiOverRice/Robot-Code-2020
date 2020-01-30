@@ -33,15 +33,16 @@ public class Cerealizer extends SubsystemBase {
   final DigitalInput breakBeamBallMiddle = new DigitalInput(Constants.breakBeamBallMiddle);
   final DigitalInput breakBeamJam = new DigitalInput(Constants.breakBeamJam);
   final DigitalInput breakBeamOut = new DigitalInput(Constants.breakBeamOut);
-  final DigitalInput positionZero = new DigitalInput(Constants.positionZero);
-  private int holeNumber;
+  final DigitalInput positionZeroLimit = new DigitalInput(Constants.positionZero);
+  private int holeNumber, numSpins;
   private int[] holePositions = {0,10,20,30,40};
 
-  NetworkTableEntry breakSensorDisplay;
+  NetworkTableEntry breakSensorDisplay, holeFullSensor;
   
 
   public Cerealizer() {
     holeNumber = 0;
+    numSpins = 0;
     rotationEncoder = cerealMotor.getEncoder();
     pidController = cerealMotor.getPIDController();
     setEncoderPosition(0);
@@ -50,6 +51,11 @@ public class Cerealizer extends SubsystemBase {
     pidController.setD(0);
     cerealMotor.burnFlash();
     breakSensorDisplay = Shuffleboard.getTab("Testing").add("break beam sensor 1", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    holeFullSensor = Shuffleboard.getTab("Testing").add("Hole Full?", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+  }
+
+  public boolean atPositionZero(){
+    return positionZeroLimit.get();
   }
 
   public void setEncoderPosition(double rotationPosition){
@@ -64,8 +70,10 @@ public class Cerealizer extends SubsystemBase {
     return rotationEncoder.getPosition();
   }
 
-  public boolean getBeamInside(){
-    return breakBeamBallInside.get();
+  //CURRENTLY CONTROLLED BY SHUFFLEBOARD (for testing purposes)
+  public boolean holeFull(){
+    return holeFullSensor.getBoolean(false);
+    //return breakBeamBallInside.get();
   }
 
   public void setRotations(double rotations){
@@ -76,26 +84,27 @@ public class Cerealizer extends SubsystemBase {
     holeNumber++;
   }
 
-  public int getHoleNumber(){
-    return holeNumber%5;
+  public void incrementNumSpins(){
+    numSpins ++;
+  }
+
+  public int getCurrentHole(){
+    return holeNumber % 5;
   }
 
   public int getNextHole(){
-    if(holeNumber<4){
-      return holeNumber + 1;
-    }
-    else{
-      return 0;
-    }
+    return (holeNumber + 1) % 5;
   }
 
-  public int[] getPositionArray(){
-    return holePositions;
+  public int getHolePosition(int hole){
+    return holePositions[hole] + numSpins*50;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    breakSensorDisplay.setBoolean(getBeamInside());
+    SmartDashboard.putNumber("Spins", numSpins);
+    breakSensorDisplay.setBoolean(holeFull());
+    SmartDashboard.putNumber("spin Velocity", rotationEncoder.getVelocity());
   }
 }
