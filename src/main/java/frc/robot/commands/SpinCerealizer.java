@@ -7,35 +7,78 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Cerealizer;
+import frc.robot.subsystems.Cerealizer.Mode;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class SpinCerealizer extends PIDCommand {
+public class SpinCerealizer extends CommandBase {
   /**
-   * Creates a new SpinCerealizer.
+   * Creates a new TurnToEmpty.
    */
-  public SpinCerealizer() {
-    super(
-        // The controller that the command will use
-        new PIDController(0, 0, 0),
-        // This should return the measurement
-        () -> 0,
-        // This should return the setpoint (can also be a constant)
-        () -> 0,
-        // This uses the output
-        output -> {
-          // Use the output here
-        });
+  private Cerealizer cerealizer;
+
+ 
+
+  private Mode mode;
+
+  double numOfRotations, targetPosition, newPosition;
+  int numCheck;
+
+  public SpinCerealizer(Cerealizer cerealizer, Mode mode) {
+    addRequirements(cerealizer);
+    this.cerealizer = cerealizer;
+    this.mode = mode;
     // Use addRequirements() here to declare subsystem dependencies.
-    // Configure additional PID options by calling `getController` here.
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    targetPosition = cerealizer.getHolePosition(cerealizer.getNextHole(), mode);
+    numCheck = 0;
+//TODO: change getNextHole to getNearestHole
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    cerealizer.setRotations(targetPosition);
+    newPosition = cerealizer.getRotationPosition();
+    SmartDashboard.putNumber("Cereal Pos", newPosition);
+    SmartDashboard.putNumber("Cereal Target Pos", targetPosition);
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    cerealizer.stopCerealMotor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
+    if (Math.abs(newPosition - targetPosition) <= 0.25) {
+      cerealizer.stopCerealMotor();
+      // TODO: pause it somehow so it actually stops?
+      cerealizer.incrementHoleNumber();
+      SmartDashboard.putNumber("hole", cerealizer.getCurrentHole());
+      if (cerealizer.getCurrentHole() == 4) {
+        cerealizer.incrementNumSpins();
+      }
+      
+      if (mode == Mode.INTAKE ? cerealizer.intakeHoleFull() : cerealizer.shooterHoleEmpty()) {
+        numCheck++;
+        if (numCheck == 4) {
+          return true;
+        }
+        targetPosition = cerealizer.getHolePosition(cerealizer.getNextHole(), mode);
+        return false;
+      }
+
+      return true;
+    }
     return false;
   }
 }

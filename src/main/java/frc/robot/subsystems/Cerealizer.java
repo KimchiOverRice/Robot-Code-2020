@@ -30,12 +30,17 @@ public class Cerealizer extends SubsystemBase {
   private CANPIDController pidController;
 
   final DigitalInput breakBeamBallInside = new DigitalInput(Constants.breakBeamBallInside);
+  final DigitalInput breakBeamShooter = new DigitalInput(Constants.breakBeamOut);
   final DigitalInput breakBeamBallMiddle = new DigitalInput(Constants.breakBeamBallMiddle);
   final DigitalInput breakBeamJam = new DigitalInput(Constants.breakBeamJam);
-  final DigitalInput breakBeamOut = new DigitalInput(Constants.breakBeamOut);
+ 
   final DigitalInput positionZeroLimit = new DigitalInput(Constants.positionZero);
   private int holeNumber, numSpins;
-  private int[] holePositions = {0,10,20,30,40};
+  public static final double DISTANCE_BETWEEN_HOLES = 10;
+
+  public enum Mode {
+    INTAKE, SHOOTER
+  };
 
   NetworkTableEntry breakSensorDisplay, holeFullSensor;
   
@@ -71,9 +76,13 @@ public class Cerealizer extends SubsystemBase {
   }
 
   //CURRENTLY CONTROLLED BY SHUFFLEBOARD (for testing purposes)
-  public boolean holeFull(){
+  public boolean intakeHoleFull(){
     return holeFullSensor.getBoolean(false);
     //return breakBeamBallInside.get();
+  }
+
+  public boolean shooterHoleEmpty(){
+    return breakBeamShooter.get();
   }
 
   public void setRotations(double rotations){
@@ -96,15 +105,15 @@ public class Cerealizer extends SubsystemBase {
     return (holeNumber + 1) % 5;
   }
 
-  public int getHolePosition(int hole){
-    return holePositions[hole] + numSpins*50;
+  public double getHolePosition(int hole, Mode mode){
+    return (hole + numSpins*5)*DISTANCE_BETWEEN_HOLES  + (mode == Mode.INTAKE ? 0 : DISTANCE_BETWEEN_HOLES/2 ); 
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Spins", numSpins);
-    breakSensorDisplay.setBoolean(holeFull());
+    breakSensorDisplay.setBoolean(intakeHoleFull());
     SmartDashboard.putNumber("spin Velocity", rotationEncoder.getVelocity());
   }
 }

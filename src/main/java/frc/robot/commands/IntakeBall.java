@@ -8,19 +8,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.Intake;
 
 public class IntakeBall extends CommandBase {
 
   private Intake intake;
+  private Cerealizer cerealizer;
   /**
    * Creates a new intakeBall.
    */
 
-  public IntakeBall(Intake intakeBall) {
+  public IntakeBall(Intake intake, Cerealizer cerealizer) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeBall);
-    intake = intakeBall;
+    addRequirements(intake);
+    addRequirements(cerealizer);
+    this.intake = intake;
+    this.cerealizer = cerealizer;
+
 
   }
 
@@ -46,6 +51,12 @@ public class IntakeBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
+    if(cerealizer.intakeHoleFull()){
+      if(intake.fullyIn()){
+       return true; 
+      }
+    }
     return false;
   }
 }

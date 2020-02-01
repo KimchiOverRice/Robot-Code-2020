@@ -41,7 +41,7 @@ public final class Constants {
     public static int rightSolenoidP2 = 3;
     public static int compressor = 0;
 
-    //serializer
+    //cerealizer
     public static int inAndOut = 9;
     public static int rotation = 7; // this is 10
     public static int breakBeamBallInside = 0;
