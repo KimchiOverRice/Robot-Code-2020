@@ -31,7 +31,6 @@ public class Cerealizer extends SubsystemBase {
 
   final DigitalInput breakBeamBallInside = new DigitalInput(Constants.breakBeamBallInside);
   final DigitalInput breakBeamShooter = new DigitalInput(Constants.breakBeamOut);
-  final DigitalInput breakBeamBallMiddle = new DigitalInput(Constants.breakBeamBallMiddle);
   final DigitalInput breakBeamJam = new DigitalInput(Constants.breakBeamJam);
  
   final DigitalInput positionZeroLimit = new DigitalInput(Constants.positionZero);
@@ -42,7 +41,7 @@ public class Cerealizer extends SubsystemBase {
     INTAKE, SHOOTER
   };
 
-  NetworkTableEntry breakSensorDisplay, holeFullSensor;
+  NetworkTableEntry breakSensorDisplay, holeFullSensor, hole1, hole2, hole3, hole4, hole0;
   
 
   public Cerealizer() {
@@ -57,6 +56,11 @@ public class Cerealizer extends SubsystemBase {
     cerealMotor.burnFlash();
     breakSensorDisplay = Shuffleboard.getTab("Testing").add("break beam sensor 1", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
     holeFullSensor = Shuffleboard.getTab("Testing").add("Hole Full?", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+    hole1 = Shuffleboard.getTab("Testing").add("hole 1", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    hole2 = Shuffleboard.getTab("Testing").add("hole 2", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    hole3 = Shuffleboard.getTab("Testing").add("hole 3", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    hole4 = Shuffleboard.getTab("Testing").add("hole 4", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    hole0 = Shuffleboard.getTab("Testing").add("hole 0", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
   }
 
   public boolean atPositionZero(){
@@ -109,11 +113,21 @@ public class Cerealizer extends SubsystemBase {
     return (hole + numSpins*5)*DISTANCE_BETWEEN_HOLES  + (mode == Mode.INTAKE ? 0 : DISTANCE_BETWEEN_HOLES/2 ); 
   }
 
+  public void trackHoles() {
+    holesFilled[getCurrentHole()] = intakeHoleFull();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Spins", numSpins);
     breakSensorDisplay.setBoolean(intakeHoleFull());
+    hole1.setBoolean(holesFilled[1]);
+    hole2.setBoolean(holesFilled[2]);
+    hole3.setBoolean(holesFilled[3]);
+    hole4.setBoolean(holesFilled[4]);
+    hole0.setBoolean(holesFilled[0]); 
+
     SmartDashboard.putNumber("spin Velocity", rotationEncoder.getVelocity());
   }
 }

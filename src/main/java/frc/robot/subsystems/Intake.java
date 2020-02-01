@@ -28,7 +28,6 @@ public class Intake extends SubsystemBase {
   final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.intakeRight1,Constants.intakeRight2);
   final CANSparkMax roller = new CANSparkMax(Constants.rollers, MotorType.kBrushless);
   final DigitalInput breakBeamBallMiddle = new DigitalInput(Constants.breakBeamBallMiddle);
-  final DigitalInput breakBeamJam = new DigitalInput(Constants.breakBeamJam);
  
 
   public Intake() {
@@ -52,7 +51,7 @@ public class Intake extends SubsystemBase {
   public boolean fullyIn(){
     return breakBeamBallMiddle.get();
   }
-  
+
 
   
   @Override

@@ -47,6 +47,7 @@ public class SpinCerealizer extends CommandBase {
     newPosition = cerealizer.getRotationPosition();
     SmartDashboard.putNumber("Cereal Pos", newPosition);
     SmartDashboard.putNumber("Cereal Target Pos", targetPosition);
+    SmartDashboard.putNumber("NumCheck", numCheck);
   }
 
   // Called once the command ends or is interrupted.
@@ -67,16 +68,17 @@ public class SpinCerealizer extends CommandBase {
       if (cerealizer.getCurrentHole() == 4) {
         cerealizer.incrementNumSpins();
       }
-      
+      if (numCheck == 4) {
+          return true;
+      }
       if (mode == Mode.INTAKE ? cerealizer.intakeHoleFull() : cerealizer.shooterHoleEmpty()) {
         numCheck++;
-        if (numCheck == 4) {
-          return true;
-        }
+        cerealizer.trackHoles();
+       
         targetPosition = cerealizer.getHolePosition(cerealizer.getNextHole(), mode);
         return false;
       }
-
+    
       return true;
     }
     return false;
