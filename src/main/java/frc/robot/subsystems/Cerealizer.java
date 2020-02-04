@@ -61,6 +61,8 @@ public class Cerealizer extends SubsystemBase {
     hole3 = Shuffleboard.getTab("Testing").add("hole 3", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
     hole4 = Shuffleboard.getTab("Testing").add("hole 4", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
     hole0 = Shuffleboard.getTab("Testing").add("hole 0", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    cerealMotor.setOpenLoopRampRate(1);
+    cerealMotor.setClosedLoopRampRate(1);
   }
 
   public boolean atPositionZero(){
@@ -113,8 +115,12 @@ public class Cerealizer extends SubsystemBase {
     return (hole + numSpins*5)*DISTANCE_BETWEEN_HOLES  + (mode == Mode.INTAKE ? 0 : DISTANCE_BETWEEN_HOLES/2 ); 
   }
 
-  public void trackHoles() {
-    holesFilled[getCurrentHole()] = intakeHoleFull();
+  public void trackHoles(Mode mode) {
+    holesFilled[getCurrentHole()] = (mode == Mode.INTAKE? intakeHoleFull() : !shooterHoleEmpty());
+  }
+
+  public void setSpeedCerealizer(double speed){
+    cerealMotor.set(speed);
   }
 
   @Override

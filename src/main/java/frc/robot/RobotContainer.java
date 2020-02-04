@@ -49,7 +49,7 @@ public class RobotContainer {
   TurnToTarget turnToTarget = new TurnToTarget(driveTrain);
   private NetworkTableEntry shooterSpeedDisplay;
 
-  private NetworkTableEntry shooterSpeedSlider;
+  private NetworkTableEntry shooterSpeedSlider, cerealizerSpeedSlider, intakeRollerSlider;
 
   public double getValueOfLeftY() {
     return joystickLeft.getY();
@@ -63,6 +63,14 @@ public class RobotContainer {
     return shooterSpeedSlider.getDouble(0.5);
   }
 
+  public double getSpeedForCerealizer() {
+    return cerealizerSpeedSlider.getDouble(0);
+  }
+
+  public double getSpeedForIntake() {
+    return intakeRollerSlider.getDouble(0);
+  }
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -71,9 +79,19 @@ public class RobotContainer {
         .withPosition(1, 1).withSize(2, 1).getEntry();
     shooterSpeedDisplay = Shuffleboard.getTab("Testing").add("Shooter Speed Display", 0)
         .withWidget(BuiltInWidgets.kTextView).getEntry();
+    cerealizerSpeedSlider = Shuffleboard.getTab("Testing").add("Cerealizer speed", 0).withWidget("Number Slider")
+        .withSize(2, 1).getEntry();
+
+    intakeRollerSlider = Shuffleboard.getTab("Testing").add("intake speed", 0).withWidget("Number Slider")
+        .withSize(2, 1).getEntry();
 
     driveTrain.setDefaultCommand(
         new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
+
+    cerealizer.setDefaultCommand(new RunCommand(() -> cerealizer.setSpeedCerealizer(0), cerealizer));
+
+    intake.setDefaultCommand(new RunCommand(() -> intake.setRollerSpeed(0), intake));
+
     // shooter.setDefaultCommand(new RunCommand(() ->
     // shooter.setSpeed(getSpeedFromSlider()), shooter));
 
@@ -93,13 +111,23 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     joystickbuttonRight.whenPressed(turnToTarget);
+
     // new JoystickButton(joystickRight, 5).whenPressed(new
     // InstantCommand(intake::intakeDown, intake));
     // new JoystickButton(joystickRight, 3).whenPressed(new
     // InstantCommand(intake::intakeUp, intake));
-    new JoystickButton(joystickRight, 7).toggleWhenPressed(new SequentialCommandGroup(
-        new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE), new IntakeBall(intake, cerealizer), new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE)));
 
+    new JoystickButton(joystickRight, 3)
+        .whileHeld(new RunCommand(() -> cerealizer.setSpeedCerealizer(getSpeedForCerealizer()), cerealizer));
+    new JoystickButton(joystickRight, 5)
+        .whileHeld(new RunCommand(() -> cerealizer.setSpeedCerealizer(-getSpeedForCerealizer()), cerealizer));
+    new JoystickButton(joystickRight, 7)
+        .toggleWhenPressed(new SequentialCommandGroup(new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE),
+            new IntakeBall(intake, cerealizer), new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE)));
+    new JoystickButton(joystickRight, 8)
+        .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
+    new JoystickButton(joystickRight, 9)
+        .whileHeld(new RunCommand(() -> intake.setRollerSpeed(-getSpeedForIntake()), intake));
   }
 
   /**

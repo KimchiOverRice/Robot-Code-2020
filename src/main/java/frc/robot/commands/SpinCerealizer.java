@@ -73,7 +73,7 @@ public class SpinCerealizer extends CommandBase {
       }
       if (mode == Mode.INTAKE ? cerealizer.intakeHoleFull() : cerealizer.shooterHoleEmpty()) {
         numCheck++;
-        cerealizer.trackHoles();
+        cerealizer.trackHoles(mode);
        
         targetPosition = cerealizer.getHolePosition(cerealizer.getNextHole(), mode);
         return false;

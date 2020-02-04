@@ -31,7 +31,8 @@ public class Intake extends SubsystemBase {
  
 
   public Intake() {
-    
+    roller.setOpenLoopRampRate(1);
+    roller.setClosedLoopRampRate(1);
   }
 
   public void intakeDown() {
