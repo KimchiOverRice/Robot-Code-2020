@@ -35,9 +35,9 @@ public class SpinCerealizer extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPosition = cerealizer.getHolePosition(cerealizer.getNextHole(), mode);
+    targetPosition = cerealizer.getHolePosition(cerealizer.getNearestTargetHole(), mode);
     numCheck = 0;
-//TODO: change getNextHole to getNearestHole
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.

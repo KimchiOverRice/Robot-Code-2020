@@ -123,6 +123,23 @@ public class Cerealizer extends SubsystemBase {
     cerealMotor.set(speed);
   }
 
+  public void setHoleFull(){
+    holesFilled[getCurrentHole()] = true;
+  }
+
+  public int getNearestTargetHole(Mode mode){
+    int holeNum = getCurrentHole();
+    int minDist = 0;
+    for(int i=0; i<holesFilled.length; i++){
+      if(holesFilled[i] == (mode == Mode.INTAKE)){
+        if(minDist > Math.abs(getCurrentHole()-i)){
+          minDist = Math.abs(getCurrentHole()-i);
+          holeNum = i;
+        }
+      }
+    }
+    return holeNum;
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

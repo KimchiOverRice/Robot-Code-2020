@@ -46,6 +46,10 @@ public class IntakeBall extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intake.setRollerSpeed(0);
+    if(!interrupted){
+      cerealizer.setHoleFull();
+    }
+    
   }
 
   // Returns true when the command should end.
