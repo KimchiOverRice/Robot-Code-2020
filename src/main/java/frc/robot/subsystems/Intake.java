@@ -13,6 +13,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,10 +27,12 @@ public class Intake extends SubsystemBase {
   final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.intakeLeft1, Constants.intakeLeft2);
   final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.intakeRight1,Constants.intakeRight2);
   final CANSparkMax roller = new CANSparkMax(Constants.rollers, MotorType.kBrushless);
+  final DigitalInput breakBeamBallMiddle = new DigitalInput(Constants.breakBeamBallMiddle);
  
 
   public Intake() {
-    
+    roller.setOpenLoopRampRate(1);
+    roller.setClosedLoopRampRate(1);
   }
 
   public void intakeDown() {
@@ -45,6 +48,11 @@ public class Intake extends SubsystemBase {
   public void setRollerSpeed(double speed){
     roller.set(speed);
   }
+
+  public boolean fullyIn(){
+    return breakBeamBallMiddle.get();
+  }
+
 
   
   @Override
