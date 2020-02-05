@@ -23,7 +23,7 @@ public class SpinCerealizer extends CommandBase {
   private Mode mode;
 
   double numOfRotations, targetPosition, newPosition;
-  int numCheck;
+ 
 
   public SpinCerealizer(Cerealizer cerealizer, Mode mode) {
     addRequirements(cerealizer);
@@ -35,8 +35,8 @@ public class SpinCerealizer extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPosition = cerealizer.getHolePosition(cerealizer.getNearestTargetHole(), mode);
-    numCheck = 0;
+    targetPosition = 
+   
 
   }
 

@@ -127,18 +127,24 @@ public class Cerealizer extends SubsystemBase {
     holesFilled[getCurrentHole()] = true;
   }
 
-  public int getNearestTargetHole(Mode mode){
-    int holeNum = getCurrentHole();
-    int minDist = 0;
-    for(int i=0; i<holesFilled.length; i++){
-      if(holesFilled[i] == (mode == Mode.INTAKE)){
-        if(minDist > Math.abs(getCurrentHole()-i)){
-          minDist = Math.abs(getCurrentHole()-i);
-          holeNum = i;
+  public double getNearestTargetHole(Mode mode){
+    double currentPosition = getRotationPosition();
+    double closestPosition;
+    double minDist = 0;
+    for(int holeIndex=0; holeIndex<holesFilled.length; holeIndex++){
+      if(holesFilled[holeIndex] == (mode == Mode.INTAKE)){
+          closestPosition = closestEncoderPosition(currentPosition, holeIndex, mode);
+
+          
         }
       }
     }
-    return holeNum;
+    return 
+  }
+
+  public double closestEncoderPosition(double currentPos, int target, Mode mode){
+    double dist = Math.round(currentPos/(5*DISTANCE_BETWEEN_HOLES)) + (double)target/5;
+    
   }
   @Override
   public void periodic() {
