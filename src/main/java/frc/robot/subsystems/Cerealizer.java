@@ -32,7 +32,7 @@ public class Cerealizer extends SubsystemBase {
   final DigitalInput breakBeamBallInside = new DigitalInput(Constants.breakBeamBallInside);
   final DigitalInput breakBeamShooter = new DigitalInput(Constants.breakBeamOut);
   final DigitalInput breakBeamJam = new DigitalInput(Constants.breakBeamJam);
- 
+
   final DigitalInput positionZeroLimit = new DigitalInput(Constants.positionZero);
   private int holeNumber, numSpins;
   public static final double DISTANCE_BETWEEN_HOLES = 10;
@@ -42,7 +42,6 @@ public class Cerealizer extends SubsystemBase {
   };
 
   NetworkTableEntry breakSensorDisplay, holeFullSensor, hole1, hole2, hole3, hole4, hole0;
-  
 
   public Cerealizer() {
     holeNumber = 0;
@@ -54,109 +53,130 @@ public class Cerealizer extends SubsystemBase {
     pidController.setI(1e-6);
     pidController.setD(0);
     cerealMotor.burnFlash();
-    breakSensorDisplay = Shuffleboard.getTab("Testing").add("break beam sensor 1", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    holeFullSensor = Shuffleboard.getTab("Testing").add("Hole Full?", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
-    hole1 = Shuffleboard.getTab("Testing").add("hole 1", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    hole2 = Shuffleboard.getTab("Testing").add("hole 2", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    hole3 = Shuffleboard.getTab("Testing").add("hole 3", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    hole4 = Shuffleboard.getTab("Testing").add("hole 4", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    hole0 = Shuffleboard.getTab("Testing").add("hole 0", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    breakSensorDisplay = Shuffleboard.getTab("Testing").add("break beam sensor 1", false)
+        .withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    holeFullSensor = Shuffleboard.getTab("Testing").add("Hole Full?", false).withWidget(BuiltInWidgets.kToggleSwitch)
+        .getEntry();
+    hole1 = Shuffleboard.getTab("Testing").add("hole 1", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+    hole2 = Shuffleboard.getTab("Testing").add("hole 2", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+    hole3 = Shuffleboard.getTab("Testing").add("hole 3", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+    hole4 = Shuffleboard.getTab("Testing").add("hole 4", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+    hole0 = Shuffleboard.getTab("Testing").add("hole 0", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
     cerealMotor.setOpenLoopRampRate(1);
     cerealMotor.setClosedLoopRampRate(1);
+
   }
 
-  public boolean atPositionZero(){
+  public boolean atPositionZero() {
     return positionZeroLimit.get();
   }
 
-  public void setEncoderPosition(double rotationPosition){
+  public void setEncoderPosition(double rotationPosition) {
     rotationEncoder.setPosition(rotationPosition);
   }
 
-  public void stopCerealMotor(){
+  public void stopCerealMotor() {
     cerealMotor.stopMotor();
   }
 
-  public double getRotationPosition(){
+  public double getRotationPosition() {
     return rotationEncoder.getPosition();
   }
 
-  //CURRENTLY CONTROLLED BY SHUFFLEBOARD (for testing purposes)
-  public boolean intakeHoleFull(){
+  // CURRENTLY CONTROLLED BY SHUFFLEBOARD (for testing purposes)
+  public boolean intakeHoleFull() {
     return holeFullSensor.getBoolean(false);
-    //return breakBeamBallInside.get();
+    // return breakBeamBallInside.get();
   }
 
-  public boolean shooterHoleEmpty(){
+  public boolean shooterHoleEmpty() {
     return breakBeamShooter.get();
   }
 
-  public void setRotations(double rotations){
+  public void setRotations(double rotations) {
     pidController.setReference(rotations, ControlType.kPosition);
   }
 
-  public void incrementHoleNumber(){
+  public void incrementHoleNumber() {
     holeNumber++;
   }
 
-  public void incrementNumSpins(){
-    numSpins ++;
+  public void incrementNumSpins() {
+    numSpins++;
   }
 
-  public int getCurrentHole(){
+  public int getCurrentHole() {
     return holeNumber % 5;
   }
 
-  public int getNextHole(){
+  public int getNextHole() {
     return (holeNumber + 1) % 5;
   }
 
-  public double getHolePosition(int hole, Mode mode){
-    return (hole + numSpins*5)*DISTANCE_BETWEEN_HOLES  + (mode == Mode.INTAKE ? 0 : DISTANCE_BETWEEN_HOLES/2 ); 
+  public double getHolePosition(int hole, Mode mode) {
+    return (hole + numSpins * 5) * DISTANCE_BETWEEN_HOLES + (mode == Mode.INTAKE ? 0 : DISTANCE_BETWEEN_HOLES / 2);
   }
 
   public void trackHoles(Mode mode) {
-    holesFilled[getCurrentHole()] = (mode == Mode.INTAKE? intakeHoleFull() : !shooterHoleEmpty());
+    holesFilled[getCurrentHole()] = (mode == Mode.INTAKE ? intakeHoleFull() : !shooterHoleEmpty());
   }
 
-  public void setSpeedCerealizer(double speed){
+  public void setSpeedCerealizer(double speed) {
     cerealMotor.set(speed);
   }
 
-  public void setHoleFull(){
+  public void setHoleFull() {
     holesFilled[getCurrentHole()] = true;
   }
 
-  public double getNearestTargetHole(Mode mode){
+  public double getNearestTargetHole(Mode mode) {
     double currentPosition = getRotationPosition();
-    double closestPosition;
-    double minDist = 0;
-    for(int holeIndex=0; holeIndex<holesFilled.length; holeIndex++){
-      if(holesFilled[holeIndex] == (mode == Mode.INTAKE)){
-          closestPosition = closestEncoderPosition(currentPosition, holeIndex, mode);
-
+    double closestTargetPosition;
+    double targetPosition = currentPosition;
+    double minDist = 50;
+    double distBtwHoles = 0;
+    for (int holeIndex = 0; holeIndex < holesFilled.length; holeIndex++) {
+      if (holesFilled[holeIndex] == (mode == Mode.SHOOTER)) {
+        closestTargetPosition = closestEncoderPosition(currentPosition, holeIndex, mode);
+        distBtwHoles = Math.abs(currentPosition - closestTargetPosition);
+        System.out.println(closestTargetPosition);
+        if (distBtwHoles < minDist) {
+          targetPosition = closestTargetPosition;
+          minDist = distBtwHoles;
           
         }
+
       }
+
     }
-    return 
+    return targetPosition;
   }
 
-  public double closestEncoderPosition(double currentPos, int target, Mode mode){
-    double dist = Math.round(currentPos/(5*DISTANCE_BETWEEN_HOLES)) + (double)target/5;
+  public double closestEncoderPosition(double currentPos, double target, Mode mode) {
+    double offset = target/5 + (mode == Mode.INTAKE ? 0 : 0.5);
+    double position = Math.round((currentPos / (5 * DISTANCE_BETWEEN_HOLES)) - offset);
+    double targetRotation = (position + offset) * (5* DISTANCE_BETWEEN_HOLES);
     
+    return targetRotation;
   }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Spins", numSpins);
     breakSensorDisplay.setBoolean(intakeHoleFull());
-    hole1.setBoolean(holesFilled[1]);
-    hole2.setBoolean(holesFilled[2]);
-    hole3.setBoolean(holesFilled[3]);
-    hole4.setBoolean(holesFilled[4]);
-    hole0.setBoolean(holesFilled[0]); 
+    holesFilled[1] = hole1.getBoolean(false);
+    holesFilled[2] = hole2.getBoolean(false);
+    holesFilled[3] = hole3.getBoolean(false);
+    holesFilled[4] = hole4.getBoolean(false);
+    holesFilled[0] = hole0.getBoolean(false);
 
+    SmartDashboard.putNumber("Cereal Pos", rotationEncoder.getPosition());
+    SmartDashboard.putBoolean("holes filled 0", holesFilled[0]);
+    SmartDashboard.putBoolean("holes filled 1", holesFilled[1]);
+    SmartDashboard.putBoolean("holes filled 2", holesFilled[2]);
+    SmartDashboard.putBoolean("holes filled 3", holesFilled[3]);
+    SmartDashboard.putBoolean("holes filled 4", holesFilled[4]);
     SmartDashboard.putNumber("spin Velocity", rotationEncoder.getVelocity());
   }
 }

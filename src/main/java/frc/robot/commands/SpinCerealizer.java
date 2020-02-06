@@ -35,8 +35,9 @@ public class SpinCerealizer extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPosition = 
-   
+    targetPosition = cerealizer.getNearestTargetHole(mode);
+   System.out.println("running");
+   System.out.println(targetPosition);
 
   }
 
@@ -45,9 +46,7 @@ public class SpinCerealizer extends CommandBase {
   public void execute() {
     cerealizer.setRotations(targetPosition);
     newPosition = cerealizer.getRotationPosition();
-    SmartDashboard.putNumber("Cereal Pos", newPosition);
     SmartDashboard.putNumber("Cereal Target Pos", targetPosition);
-    SmartDashboard.putNumber("NumCheck", numCheck);
   }
 
   // Called once the command ends or is interrupted.
@@ -61,26 +60,10 @@ public class SpinCerealizer extends CommandBase {
   public boolean isFinished() {
 
     if (Math.abs(newPosition - targetPosition) <= 0.25) {
-      cerealizer.stopCerealMotor();
-      // TODO: pause it somehow so it actually stops?
-      cerealizer.incrementHoleNumber();
-      SmartDashboard.putNumber("hole", cerealizer.getCurrentHole());
-      if (cerealizer.getCurrentHole() == 4) {
-        cerealizer.incrementNumSpins();
-      }
-      if (numCheck == 4) {
-          return true;
-      }
-      if (mode == Mode.INTAKE ? cerealizer.intakeHoleFull() : cerealizer.shooterHoleEmpty()) {
-        numCheck++;
-        cerealizer.trackHoles(mode);
-       
-        targetPosition = cerealizer.getHolePosition(cerealizer.getNextHole(), mode);
-        return false;
-      }
-    
       return true;
     }
+
     return false;
   }
+
 }

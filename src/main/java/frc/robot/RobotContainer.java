@@ -124,6 +124,13 @@ public class RobotContainer {
     new JoystickButton(joystickRight, 7)
         .toggleWhenPressed(new SequentialCommandGroup(new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE),
             new IntakeBall(intake, cerealizer), new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE)));
+
+    new JoystickButton(joystickRight, 4)
+        .whileHeld(new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE));
+
+    new JoystickButton(joystickRight, 6)
+        .whileHeld(new SpinCerealizer(cerealizer, Cerealizer.Mode.SHOOTER));
+
     new JoystickButton(joystickRight, 8)
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
     new JoystickButton(joystickRight, 9)
