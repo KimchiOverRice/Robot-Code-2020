@@ -41,30 +41,31 @@ public class Cerealizer extends SubsystemBase {
     INTAKE, SHOOTER
   };
 
-  NetworkTableEntry breakSensorDisplay, holeFullSensor, hole1, hole2, hole3, hole4, hole0;
+  NetworkTableEntry breakSensorDisplay, holeFullSensor;
+  NetworkTableEntry[] holeToggles = new NetworkTableEntry[5];
 
   public Cerealizer() {
     holeNumber = 0;
     numSpins = 0;
+
     rotationEncoder = cerealMotor.getEncoder();
     pidController = cerealMotor.getPIDController();
     setEncoderPosition(0);
     pidController.setP(0.01);
     pidController.setI(1e-6);
     pidController.setD(0);
-    cerealMotor.burnFlash();
+
+    cerealMotor.burnFlash();    
+    cerealMotor.setOpenLoopRampRate(1);
+    cerealMotor.setClosedLoopRampRate(1);
+
     breakSensorDisplay = Shuffleboard.getTab("Testing").add("break beam sensor 1", false)
         .withWidget(BuiltInWidgets.kBooleanBox).getEntry();
     holeFullSensor = Shuffleboard.getTab("Testing").add("Hole Full?", false).withWidget(BuiltInWidgets.kToggleSwitch)
         .getEntry();
-    hole1 = Shuffleboard.getTab("Testing").add("hole 1", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-    hole2 = Shuffleboard.getTab("Testing").add("hole 2", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-    hole3 = Shuffleboard.getTab("Testing").add("hole 3", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-    hole4 = Shuffleboard.getTab("Testing").add("hole 4", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-    hole0 = Shuffleboard.getTab("Testing").add("hole 0", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-    cerealMotor.setOpenLoopRampRate(1);
-    cerealMotor.setClosedLoopRampRate(1);
-
+    for (int a = 0; a < holeToggles.length; a++){
+      holeToggles[a] = Shuffleboard.getTab("Testing").add("hole " + a, false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+    }
   }
 
   public boolean atPositionZero() {
@@ -165,18 +166,13 @@ public class Cerealizer extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Spins", numSpins);
     breakSensorDisplay.setBoolean(intakeHoleFull());
-    holesFilled[1] = hole1.getBoolean(false);
-    holesFilled[2] = hole2.getBoolean(false);
-    holesFilled[3] = hole3.getBoolean(false);
-    holesFilled[4] = hole4.getBoolean(false);
-    holesFilled[0] = hole0.getBoolean(false);
+
+    for(int a = 0; a < holeToggles.length; a++){
+      holesFilled[a] = holeToggles[a].getBoolean(false);
+      SmartDashboard.putBoolean("holes filled " + a, holesFilled[a]);
+    }
 
     SmartDashboard.putNumber("Cereal Pos", rotationEncoder.getPosition());
-    SmartDashboard.putBoolean("holes filled 0", holesFilled[0]);
-    SmartDashboard.putBoolean("holes filled 1", holesFilled[1]);
-    SmartDashboard.putBoolean("holes filled 2", holesFilled[2]);
-    SmartDashboard.putBoolean("holes filled 3", holesFilled[3]);
-    SmartDashboard.putBoolean("holes filled 4", holesFilled[4]);
     SmartDashboard.putNumber("spin Velocity", rotationEncoder.getVelocity());
   }
 }
