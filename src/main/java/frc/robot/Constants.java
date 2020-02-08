@@ -40,12 +40,12 @@ public final class Constants {
     public static int intakeLeft2 = 6;
     public static int intakeRight1 = 5;
     public static int intakeRight2 = 7;
-    public static int rollers = 8;
+    public static int rollers = 7;
 
 
     //shooter
-    public static int leftWheels = 3;
-    public static int rightWheels = 2;
+    public static int leftWheels = 11;
+    public static int rightWheels = 12;
     public static int leftSolenoidP1 = 0;
     public static int leftSolenoidP2 = 1;
     public static int rightSolenoidP1 = 2;
@@ -53,8 +53,9 @@ public final class Constants {
     public static int compressor = 0;
 
     //cerealizer
-    public static int inAndOut = 9;
-    public static int rotation = 7; // this is 10
+    public static int ejectBall = 10;
+    public static int spin1 = 8;
+    public static int spin2 = 9;
     public static int breakBeamBallInside = 0;
     public static int breakBeamBallMiddle =3;
     public static int breakBeamJam = 4;

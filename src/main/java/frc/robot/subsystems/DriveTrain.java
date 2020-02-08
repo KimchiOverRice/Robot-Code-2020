@@ -33,14 +33,14 @@ public class DriveTrain extends SubsystemBase {
 
     frontLeft.setInverted(true);
 
-    driveTrain = new DifferentialDrive(frontLeft, frontRight);
-    driveTrain.setDeadband(0.1);
+    //driveTrain = new DifferentialDrive(frontLeft, frontRight);
+    //driveTrain.setDeadband(0.1);
   }
 
   public void setSpeed(double leftSpeed, double rightSpeed){
-    /*frontRight.set(rightSpeed);
-    frontLeft.set(leftSpeed);*/
-    driveTrain.tankDrive(leftSpeed, rightSpeed);
+    frontRight.set(rightSpeed);
+    frontLeft.set(leftSpeed);
+    //driveTrain.tankDrive(leftSpeed, rightSpeed);
     SmartDashboard.putNumber("Left Speed", leftSpeed);
     SmartDashboard.putNumber("Right Speed", rightSpeed);
 
