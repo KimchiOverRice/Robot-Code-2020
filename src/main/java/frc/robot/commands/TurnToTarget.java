@@ -29,10 +29,7 @@ public class TurnToTarget extends CommandBase {
     
     addRequirements(driveTrain);
     this.driveTrain = driveTrain;
-    proportionSlider = Shuffleboard.getTab("Testing")
-    .add("Turning Constant", DEFAULT_SPEED_CONST)
-    .withWidget("Number Slider")
-    .getEntry();
+    
     minSpeedSlider = Shuffleboard.getTab("Testing")
     .add("Minimum Speed", DEFAULT_MIN_CONST)
     .withWidget("Number Slider")

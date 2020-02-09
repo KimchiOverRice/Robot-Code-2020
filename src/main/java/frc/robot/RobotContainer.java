@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.IntakeBall;
 import frc.robot.commands.SpinCerealizer;
 import frc.robot.commands.TurnToTarget;
+import frc.robot.commands.TurnToTargetBetter;
 import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
@@ -45,7 +46,7 @@ public class RobotContainer {
 
   Joystick joystickLeft = new Joystick(1);
   Joystick joystickRight = new Joystick(2);
-  JoystickButton joystickbuttonRight = new JoystickButton(joystickRight, 2);
+  //JoystickButton joystickbuttonRight = new JoystickButton(joystickRight, 2);
   TurnToTarget turnToTarget = new TurnToTarget(driveTrain);
   private NetworkTableEntry shooterSpeedDisplay;
 
@@ -110,7 +111,7 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    joystickbuttonRight.whenPressed(turnToTarget);
+    new JoystickButton(joystickRight, 2).whileHeld(new TurnToTargetBetter(driveTrain));
 
     // new JoystickButton(joystickRight, 5).whenPressed(new
     // InstantCommand(intake::intakeDown, intake));
