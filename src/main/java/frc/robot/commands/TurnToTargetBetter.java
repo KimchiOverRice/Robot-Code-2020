@@ -33,6 +33,12 @@ public class TurnToTargetBetter extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
+          if(output<0){
+            output = output - DriveTrain.MIN_POWER;
+          }
+          else if(output>0){
+            output = output + DriveTrain.MIN_POWER; 
+          }
           driveTrain.setSpeed(output, -output);
         });
     // Use addRequirements() here to declare subsystem dependencies.
