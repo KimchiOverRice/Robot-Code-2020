@@ -68,6 +68,7 @@ public class Shooter extends SubsystemBase {
     rpmDisplay.setDouble(encoder.getVelocity());
     rightCurrent.setDouble(rightWheel.getOutputCurrent());
     leftCurrent.setDouble(leftWheel.getOutputCurrent());
+    squeezer.start();
   }
 
   public void hoodDown() {

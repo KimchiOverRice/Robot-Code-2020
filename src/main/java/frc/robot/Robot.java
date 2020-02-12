@@ -101,8 +101,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     SmartDashboard.putNumber("tx", Limelight.getTx());
-    SmartDashboard.putNumber("Distance from target upper", Limelight.getDistTopTarget());
-    SmartDashboard.putNumber("Distance from target bottom", Limelight.getDistBottomTarget());
+   
   }
 
   @Override

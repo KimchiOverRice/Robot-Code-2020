@@ -58,14 +58,7 @@ public class Limelight {
 		return getValue("ty").getDouble(0.00);
 	}
 
-	public static double getDistTopTarget(){
-		return ((98.5/12)- height) /Math.tan(getTy() + kMountAngle);
-	}
-
-	public static double getDistBottomTarget(){
-		return ((23/12) - height) /Math.tan(getTy() + kMountAngle);
-	}
- 
+	
 	/**
 	 * Area that the detected target takes up in total camera FOV (0% to 100%).
 	 * 
