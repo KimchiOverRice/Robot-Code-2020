@@ -15,6 +15,10 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.IntakeBall;
 import frc.robot.commands.MoveHood;
+<<<<<<< HEAD
+=======
+import frc.robot.commands.ShootBall;
+>>>>>>> 19b374ce9b352d1e7d58b5bf6cd801ab65895153
 import frc.robot.commands.SpinCerealizer;
 import frc.robot.commands.TurnToTarget;
 import frc.robot.commands.TurnToTargetBetter;
@@ -45,7 +49,6 @@ public class RobotContainer {
   final Shooter shooter = new Shooter();
   final Intake intake = new Intake();
   final Cerealizer cerealizer = new Cerealizer();
-
   Joystick joystickLeft = new Joystick(1);
   Joystick joystickRight = new Joystick(2);
   //JoystickButton joystickbuttonRight = new JoystickButton(joystickRight, 2);
@@ -138,9 +141,12 @@ public class RobotContainer {
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
     new JoystickButton(joystickRight, 9)
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(-getSpeedForIntake()), intake));
-
-    new JoystickButton(joystickRight, 10). whileHeld(new MoveHood(shooter, HoodPosition.UP));
-    new JoystickButton(joystickRight, 11). whileHeld(new MoveHood(shooter, HoodPosition.DOWN));
+    new JoystickButton(joystickRight, 1)
+        .whileHeld(new ShootBall(shooter));
+    new JoystickButton(joystickLeft, 1)
+        .whenPressed(new MoveHood(shooter, HoodPosition.UP));
+    new JoystickButton(joystickLeft, 2)
+        .whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
   }
 
   /**

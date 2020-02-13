@@ -30,6 +30,10 @@ public class DriveTrain extends SubsystemBase {
 
   NetworkTableEntry proportionSlider;
   public static final double DEFAULT_SPEED_CONST = 0.01;
+<<<<<<< HEAD
+=======
+  public static final double MIN_POWER = 0.05;
+>>>>>>> 19b374ce9b352d1e7d58b5bf6cd801ab65895153
 
   public DriveTrain() {
     frontLeft.restoreFactoryDefaults();

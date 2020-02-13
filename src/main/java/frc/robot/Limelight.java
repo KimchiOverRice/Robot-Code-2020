@@ -11,7 +11,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  */
 public class Limelight {
 	private static NetworkTableInstance table = null;
-
+	public static final double height = 2;
+	public static final double kMountAngle = 60;
 	/**
 	 * Light modes for Limelight.
 	 * 
@@ -57,6 +58,7 @@ public class Limelight {
 		return getValue("ty").getDouble(0.00);
 	}
 
+	
 	/**
 	 * Area that the detected target takes up in total camera FOV (0% to 100%).
 	 * 
@@ -113,6 +115,8 @@ public class Limelight {
 	public static void setPipeline(int number) {
 		getValue("pipeline").setNumber(number);
 	}
+
+
 
 	/**
 	 * Helper method to get an entry from the Limelight NetworkTable.
