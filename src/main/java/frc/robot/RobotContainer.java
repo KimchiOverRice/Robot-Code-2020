@@ -15,10 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.IntakeBall;
 import frc.robot.commands.MoveHood;
-<<<<<<< HEAD
-=======
 import frc.robot.commands.ShootBall;
->>>>>>> 19b374ce9b352d1e7d58b5bf6cd801ab65895153
 import frc.robot.commands.SpinCerealizer;
 import frc.robot.commands.TurnToTarget;
 import frc.robot.commands.TurnToTargetBetter;
@@ -58,11 +55,11 @@ public class RobotContainer {
   private NetworkTableEntry shooterSpeedSlider, cerealizerSpeedSlider, intakeRollerSlider;
 
   public double getValueOfLeftY() {
-    return joystickLeft.getY();
+    return -joystickLeft.getY();
   }
 
   public double getValueOfRightY() {
-    return joystickRight.getY();
+    return -joystickRight.getY();
   }
 
   public double getSpeedFromSlider() {

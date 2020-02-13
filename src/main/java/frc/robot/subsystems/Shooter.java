@@ -68,11 +68,7 @@ public class Shooter extends SubsystemBase {
     rpmDisplay.setDouble(encoder.getVelocity());
     rightCurrent.setDouble(rightWheel.getOutputCurrent());
     leftCurrent.setDouble(leftWheel.getOutputCurrent());
-<<<<<<< HEAD
-    compress();
-=======
-    squeezer.start();
->>>>>>> 19b374ce9b352d1e7d58b5bf6cd801ab65895153
+    compressor.start();
   }
 
   public void hoodDown() {

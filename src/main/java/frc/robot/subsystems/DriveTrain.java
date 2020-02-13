@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SerialPort;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Limelight;
 
 public class DriveTrain extends SubsystemBase {
   final CANSparkMax frontLeft = new CANSparkMax(Constants.frontLeft, MotorType.kBrushless);
@@ -26,14 +29,13 @@ public class DriveTrain extends SubsystemBase {
   final CANSparkMax backLeft = new CANSparkMax(Constants.backLeft, MotorType.kBrushless);
   final CANSparkMax backRight = new CANSparkMax(Constants.backRight, MotorType.kBrushless);
 
+  AHRS gyro = new AHRS(SerialPort.Port.kMXP);
+
   DifferentialDrive driveTrain;
 
   NetworkTableEntry proportionSlider;
   public static final double DEFAULT_SPEED_CONST = 0.01;
-<<<<<<< HEAD
-=======
-  public static final double MIN_POWER = 0.05;
->>>>>>> 19b374ce9b352d1e7d58b5bf6cd801ab65895153
+  public static final double MIN_POWER = 0;
 
   public DriveTrain() {
     frontLeft.restoreFactoryDefaults();
@@ -42,14 +44,17 @@ public class DriveTrain extends SubsystemBase {
     frontRight.restoreFactoryDefaults();
     middleRight.restoreFactoryDefaults();
     backRight.restoreFactoryDefaults();
-    
-    frontLeft.setInverted(true);
-    frontRight.setInverted(true);
 
     middleLeft.follow(frontLeft);
     backLeft.follow(frontLeft);
     middleRight.follow(frontRight);
     backRight.follow(frontRight);
+
+    frontLeft.setOpenLoopRampRate(1);
+    frontLeft.setClosedLoopRampRate(1);
+
+    frontRight.setOpenLoopRampRate(1);
+    frontRight.setClosedLoopRampRate(1);
 
     proportionSlider = Shuffleboard.getTab("Testing")
     .add("Turning P",0)
@@ -78,11 +83,21 @@ public class DriveTrain extends SubsystemBase {
     return proportionSlider.getDouble(0);
   }
 
+  public double getTargetAngle(){
+    return Limelight.getTx() + gyro.getAngle();
+  }
+
+  public double getCurrentAngle(){
+    return gyro.getAngle();
+  }
+
+  public void zeroGyro(){
+    gyro.zeroYaw();
+  }
+
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("DriveTrain P", getP());
-    SmartDashboard.putBoolean("left invert", frontLeft.getInverted());
-    SmartDashboard.putBoolean("right invert",frontRight.getInverted());
+    SmartDashboard.putNumber("Gyro Angle", getCurrentAngle());
     // This method will be called once per scheduler run
   }
 }

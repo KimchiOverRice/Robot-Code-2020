@@ -21,15 +21,14 @@ public class TurnToTargetBetter extends PIDCommand {
    */
   private DriveTrain driveTrain;
   public TurnToTargetBetter(DriveTrain driveTrain) {
-
     super(
     
         // The controller that the command will use
-        new PIDController(.035, 0, 0),
+        new PIDController(.04, 0, .0009),
         // This should return the measurement
-        () -> Limelight.getTx(),
+        () -> driveTrain.getCurrentAngle(),
         // This should return the setpoint (can also be a constant)
-        () -> 0,
+        () -> driveTrain.getTargetAngle(),
         // This uses the output
         output -> {
           // Use the output here
@@ -43,6 +42,7 @@ public class TurnToTargetBetter extends PIDCommand {
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
+    driveTrain.zeroGyro();
     addRequirements(driveTrain);
     this.driveTrain = driveTrain;
   }

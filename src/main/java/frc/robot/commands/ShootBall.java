@@ -20,15 +20,15 @@ public class ShootBall extends CommandBase {
   private Shooter shooter;
 
   private static final double height = 0;
-  private static final double kMountAngle = 45;
+  private static final double kMountAngle = 0;
   private double distanceToTarget;
+  private double targetHeight = 2.5; //98.5/12
   //private NetworkTableEntry limelightDis;
   public ShootBall(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
     this.shooter = shooter;
     distanceToTarget = getDistToTarget();
-    SmartDashboard.putNumber("Limelight Distance", distanceToTarget);
   }
 
   // Called when the command is initially scheduled.
@@ -39,7 +39,7 @@ public class ShootBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    SmartDashboard.putNumber("Limelight Distance", getDistToTarget());
   }
 
   // Called once the command ends or is interrupted.
@@ -52,7 +52,7 @@ public class ShootBall extends CommandBase {
   public boolean isFinished() {
     return false;
   }
-  public static double getDistToTarget(){
-		return ((98.5/12)- height) /Math.tan(Limelight.getTy() + kMountAngle);
+  public double getDistToTarget(){
+		return (targetHeight - height) /Math.tan(Math.toRadians(Limelight.getTy() + kMountAngle));
 	}
 }
