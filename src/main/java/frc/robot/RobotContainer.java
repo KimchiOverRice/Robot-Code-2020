@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.IntakeBall;
+import frc.robot.commands.MoveHood;
 import frc.robot.commands.SpinCerealizer;
 import frc.robot.commands.TurnToTarget;
 import frc.robot.commands.TurnToTargetBetter;
+import frc.robot.commands.MoveHood.HoodPosition;
 import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
@@ -40,7 +42,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   final DriveTrain driveTrain = new DriveTrain();
-  // final Shooter shooter = new Shooter();
+  final Shooter shooter = new Shooter();
   final Intake intake = new Intake();
   final Cerealizer cerealizer = new Cerealizer();
 
@@ -93,7 +95,7 @@ public class RobotContainer {
 
     intake.setDefaultCommand(new RunCommand(() -> intake.setRollerSpeed(0), intake));
 
-    // shooter.setDefaultCommand(new RunCommand(() ->
+    //shooter.setDefaultCommand(new RunCommand(() ->
     // shooter.setSpeed(getSpeedFromSlider()), shooter));
 
     // Configure the button bindings
@@ -136,6 +138,9 @@ public class RobotContainer {
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
     new JoystickButton(joystickRight, 9)
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(-getSpeedForIntake()), intake));
+
+    new JoystickButton(joystickRight, 10). whileHeld(new MoveHood(shooter, HoodPosition.UP));
+    new JoystickButton(joystickRight, 11). whileHeld(new MoveHood(shooter, HoodPosition.DOWN));
   }
 
   /**

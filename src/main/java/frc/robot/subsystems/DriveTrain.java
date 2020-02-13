@@ -29,7 +29,7 @@ public class DriveTrain extends SubsystemBase {
   DifferentialDrive driveTrain;
 
   NetworkTableEntry proportionSlider;
-  public static double DEFAULT_SPEED_CONST = 0.01;
+  public static final double DEFAULT_SPEED_CONST = 0.01;
 
   public DriveTrain() {
     frontLeft.restoreFactoryDefaults();

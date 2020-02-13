@@ -24,7 +24,7 @@ import frc.robot.Constants;
 public class Shooter extends SubsystemBase {
   final CANSparkMax leftWheel = new CANSparkMax(Constants.leftWheels, MotorType.kBrushless);
   final CANSparkMax rightWheel = new CANSparkMax(Constants.rightWheels, MotorType.kBrushless);
-  final Compressor squeezer = new Compressor(Constants.compressor);
+  final Compressor compressor = new Compressor(Constants.compressor);
   final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.leftSolenoidP1,Constants.leftSolenoidP2);
   final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.rightSolenoidP1,Constants.rightSolenoidP2);
   private CANEncoder encoder;
@@ -68,6 +68,7 @@ public class Shooter extends SubsystemBase {
     rpmDisplay.setDouble(encoder.getVelocity());
     rightCurrent.setDouble(rightWheel.getOutputCurrent());
     leftCurrent.setDouble(leftWheel.getOutputCurrent());
+    compress();
   }
 
   public void hoodDown() {
@@ -78,5 +79,9 @@ public class Shooter extends SubsystemBase {
   public void hoodUp(){
     leftSolenoid.set(DoubleSolenoid.Value.kForward);
     rightSolenoid.set(DoubleSolenoid.Value.kForward);
+  }
+
+  public void compress(){
+    compressor.start();
   }
 }
