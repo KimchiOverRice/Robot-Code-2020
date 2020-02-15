@@ -9,6 +9,8 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
+
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -28,6 +30,11 @@ public class DriveTrain extends SubsystemBase {
   final CANSparkMax middleRight = new CANSparkMax(Constants.middleRight, MotorType.kBrushless);
   final CANSparkMax backLeft = new CANSparkMax(Constants.backLeft, MotorType.kBrushless);
   final CANSparkMax backRight = new CANSparkMax(Constants.backRight, MotorType.kBrushless);
+  
+  
+  private CANPIDController driveTrainPIDLeft;
+  private CANPIDController driveTrainPIDRight;
+  
 
   AHRS gyro = new AHRS(SerialPort.Port.kMXP);
 
@@ -49,6 +56,17 @@ public class DriveTrain extends SubsystemBase {
     backLeft.follow(frontLeft);
     middleRight.follow(frontRight);
     backRight.follow(frontRight);
+
+    driveTrainPIDLeft = frontLeft.getPIDController();
+    driveTrainPIDLeft.setP(0.0001);
+    driveTrainPIDLeft.setI(0.00000001);
+    driveTrainPIDLeft.setD(0.001);
+
+    
+    driveTrainPIDRight = frontRight.getPIDController();
+    driveTrainPIDRight.setP(0.0001);
+    driveTrainPIDRight.setI(1e-6);
+    driveTrainPIDRight.setD(0.001);
 
     frontLeft.setOpenLoopRampRate(1);
     frontLeft.setClosedLoopRampRate(1);
@@ -95,9 +113,16 @@ public class DriveTrain extends SubsystemBase {
     gyro.zeroYaw();
   }
 
+  public void driveToDistance(){
+     // driveTrainPIDLeft.setReference(rotations, ControlType.kPosition);
+      //driveTrainPIDRight.setReference(rotations, ControlType.kPosition);
+      
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Gyro Angle", getCurrentAngle());
+ 
     // This method will be called once per scheduler run
   }
 }

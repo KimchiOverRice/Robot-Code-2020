@@ -18,7 +18,7 @@ import frc.robot.commands.MoveHood;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.SpinCerealizer;
 import frc.robot.commands.TurnToTarget;
-import frc.robot.commands.TurnToTargetBetter;
+import frc.robot.commands.TurnToTarget;
 import frc.robot.commands.MoveHood.HoodPosition;
 import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.DriveTrain;
@@ -113,7 +113,7 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(joystickRight, 2).whileHeld(new TurnToTargetBetter(driveTrain));
+    new JoystickButton(joystickRight, 2).whileHeld(new TurnToTarget(driveTrain));
 
     // new JoystickButton(joystickRight, 5).whenPressed(new
     // InstantCommand(intake::intakeDown, intake));

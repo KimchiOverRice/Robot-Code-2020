@@ -7,78 +7,49 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Limelight;
-import frc.robot.Limelight.LightMode;
 import frc.robot.subsystems.DriveTrain;
 
-public class TurnToTarget extends CommandBase {
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
+public class TurnToTarget extends PIDCommand {
   /**
-   * Creates a new TurnToTarget.
+   * Creates a new TurnToTargetBetter.
    */
-  DriveTrain driveTrain;
-  double tx, speedConst;
-  NetworkTableEntry proportionSlider, minSpeedSlider;
-  static double DEFAULT_SPEED_CONST = 0.01, DEFAULT_MIN_CONST = 0;
-
-
+  private DriveTrain driveTrain;
   public TurnToTarget(DriveTrain driveTrain) {
+    super(
     
+        // The controller that the command will use
+        new PIDController(.04, 0, .0009),
+        // This should return the measurement
+        () -> driveTrain.getCurrentAngle(),
+        // This should return the setpoint (can also be a constant)
+        () -> driveTrain.getTargetAngle(),
+        // This uses the output
+        output -> {
+          // Use the output here
+          if(output<0){
+            output = output - DriveTrain.MIN_POWER;
+          }
+          else if(output>0){
+            output = output + DriveTrain.MIN_POWER; 
+          }
+          driveTrain.setSpeed(output, -output);
+        });
+    // Use addRequirements() here to declare subsystem dependencies.
+    // Configure additional PID options by calling `getController` here.
+    driveTrain.zeroGyro();
     addRequirements(driveTrain);
     this.driveTrain = driveTrain;
-    
-    minSpeedSlider = Shuffleboard.getTab("Testing")
-    .add("Minimum Speed", DEFAULT_MIN_CONST)
-    .withWidget("Number Slider")
-    .getEntry();
-  }
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-   
-    System.out.println("Starting");
-    //Limelight.setLedMode(LightMode.eOn);
-    SmartDashboard.putBoolean("Turning", true);
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    double speed;
-    tx = Limelight.getTx();
-    speedConst = proportionSlider.getDouble(DEFAULT_SPEED_CONST);
-    speed = speedConst*tx;
-    if ( tx > 0 ){
-      speed = speed + minSpeedSlider.getDouble(DEFAULT_MIN_CONST);
-    } else if (tx < 0){
-      speed = speed - minSpeedSlider.getDouble(DEFAULT_MIN_CONST);
-    }
-    
-    driveTrain.setSpeed(speed, -speed);
-    SmartDashboard.putNumber("Speed", speed);
-
-
-
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    driveTrain.setSpeed(0,0);
-    SmartDashboard.putBoolean("Turning", false);
-    //Limelight.setLedMode(LightMode.eOff);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (tx == 0){
-      return true;
-    } else {
     return false;
-    }
   }
 }

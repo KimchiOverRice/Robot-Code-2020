@@ -8,7 +8,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -20,32 +22,51 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Limelight;
 
 public class Shooter extends SubsystemBase {
-  final CANSparkMax leftWheel = new CANSparkMax(Constants.leftWheels, MotorType.kBrushless);
-  final CANSparkMax rightWheel = new CANSparkMax(Constants.rightWheels, MotorType.kBrushless);
+  final CANSparkMax flywheelLeft = new CANSparkMax(Constants.leftWheels, MotorType.kBrushless);
+  final CANSparkMax flywheelRight = new CANSparkMax(Constants.rightWheels, MotorType.kBrushless);
   final Compressor compressor = new Compressor(Constants.compressor);
   final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.leftSolenoidP1,Constants.leftSolenoidP2);
   final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.rightSolenoidP1,Constants.rightSolenoidP2);
+
+  private static final double height = 0;
+  private static final double kMountAngle = 0;
+  private double targetHeight = 2.5; //98.5/12
+  
   private CANEncoder encoder;
-  NetworkTableEntry rpmDisplay, leftCurrent, rightCurrent, leftVoltage, rightVoltage;
+  private CANPIDController flyWheelPIDController;
+  NetworkTableEntry rpmDisplay, leftCurrent, rightCurrent, leftVoltage, rightVoltage, velocity;
 
   public Shooter() {
-    leftWheel.restoreFactoryDefaults();
-    rightWheel.restoreFactoryDefaults();
+    flywheelLeft.restoreFactoryDefaults();
+    flywheelRight.restoreFactoryDefaults();
 
     rpmDisplay = Shuffleboard.getTab("Testing").add("Shooter RPM", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
     rightCurrent = Shuffleboard.getTab("Testing").add("Right Current", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
     leftCurrent = Shuffleboard.getTab("Testing").add("Left Current", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
     rightVoltage = Shuffleboard.getTab("Testing").add("Right Voltage", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-    leftVoltage = Shuffleboard.getTab("Testing").add("Left Voltage", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+    velocity = Shuffleboard.getTab("Testing").add("Velocity", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
-    leftWheel.setSmartCurrentLimit(35);
-    rightWheel.setSmartCurrentLimit(35);
+    flyWheelPIDController = flywheelLeft.getPIDController();
+    flyWheelPIDController.setP(0.0001);
+    flyWheelPIDController.setI(0.00000001);
+    flyWheelPIDController.setD(0.001);
+
+    flywheelLeft.setSmartCurrentLimit(35);
+    flywheelRight.setSmartCurrentLimit(35);
+
+    flywheelLeft.setOpenLoopRampRate(1);
+    flywheelLeft.setClosedLoopRampRate(1);
+
+    flywheelRight.setOpenLoopRampRate(1);
+    flywheelRight.setClosedLoopRampRate(1);
+
 
     //testMotor.enableVoltageCompensation(12);
-    encoder = leftWheel.getEncoder();
-    rightWheel.follow(leftWheel, true);
+    encoder = flywheelLeft.getEncoder();
+    flywheelRight.follow(flywheelLeft, true);
     //Shuffleboard.getTab("Testing").add("Velocity", encoder);
   }
 
@@ -57,7 +78,7 @@ public class Shooter extends SubsystemBase {
   public void setSpeed(double speed)
   {
     //System.out.println(leftWheel.getOutputCurrent());
-    leftWheel.set(speed);
+    flywheelLeft.set(speed);
     //rightWheel.set(-speed);
   }
 
@@ -66,9 +87,9 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     //SmartDashboard.putNumber("Shooter Velocity", getVelocity());
     rpmDisplay.setDouble(encoder.getVelocity());
-    rightCurrent.setDouble(rightWheel.getOutputCurrent());
-    leftCurrent.setDouble(leftWheel.getOutputCurrent());
     compressor.start();
+
+    setVelocity(velocity.getDouble(0));
   }
 
   public void hoodDown() {
@@ -84,4 +105,12 @@ public class Shooter extends SubsystemBase {
   public void compress(){
     compressor.start();
   }
+
+  public void setVelocity(double velocity) {
+    flyWheelPIDController.setReference(velocity, ControlType.kVelocity);
+  }
+  public double getDistToTarget(){
+		return (targetHeight - height) /Math.tan(Math.toRadians(Limelight.getTy() + kMountAngle));
+  }
+
 }
