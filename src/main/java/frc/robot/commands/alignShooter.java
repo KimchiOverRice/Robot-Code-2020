@@ -8,18 +8,32 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class alignShooter extends SequentialCommandGroup {
+public class AlignShooter extends SequentialCommandGroup {
   /**
    * Creates a new alignShooter.
    */
+  private Shooter shooter = new Shooter();
+  private DriveTrain driveTrain = new DriveTrain();
+  
 
-  public alignShooter() {
+  public AlignShooter(Shooter shooter, DriveTrain driveTrain) {
+    super(new ApproachTarget(shooter), new TurnToTarget(driveTrain));
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super();
+    // super(new ShootBall(shooter), new  );
+    this.shooter = shooter;
+    this.driveTrain = driveTrain;
+   
+
+
+
   }
+
+
 }

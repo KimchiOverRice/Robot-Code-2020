@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.HoodPosition;
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,7 +17,7 @@ import frc.robot.subsystems.Shooter;
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class MoveHood extends InstantCommand {
   private Shooter shooter;
-  public enum HoodPosition { UP , DOWN };
+ 
   private HoodPosition targetPosition;
 
   public MoveHood(Shooter shooter, HoodPosition position) {

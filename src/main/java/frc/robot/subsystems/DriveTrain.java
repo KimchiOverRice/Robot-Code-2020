@@ -10,8 +10,11 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
 
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -34,7 +37,19 @@ public class DriveTrain extends SubsystemBase {
   
   private CANPIDController driveTrainPIDLeft;
   private CANPIDController driveTrainPIDRight;
-  
+
+  final CANEncoder rotationEncoderLeftFront;
+  final CANEncoder rotationEncoderLeftMiddle;
+  final CANEncoder rotationEncoderLeftBack;
+  final CANEncoder rotationEncoderRightFront;
+  final CANEncoder rotationEncoderRightMiddle;
+  final CANEncoder rotationEncoderRightBack;
+
+  private double[] targetShooterPositions = {25.0 , 17.0 };
+  private static final double height = 0;
+  private static final double kMountAngle = 0;
+  private double targetHeight = 2.5; //98.5/12
+
 
   AHRS gyro = new AHRS(SerialPort.Port.kMXP);
 
@@ -59,15 +74,24 @@ public class DriveTrain extends SubsystemBase {
 
     driveTrainPIDLeft = frontLeft.getPIDController();
     driveTrainPIDLeft.setP(0.0001);
-    driveTrainPIDLeft.setI(0.00000001);
+    driveTrainPIDLeft.setI(1e-7);
     driveTrainPIDLeft.setD(0.001);
 
-    
     driveTrainPIDRight = frontRight.getPIDController();
     driveTrainPIDRight.setP(0.0001);
     driveTrainPIDRight.setI(1e-6);
     driveTrainPIDRight.setD(0.001);
 
+    rotationEncoderLeftFront = frontLeft.getEncoder();
+    rotationEncoderLeftMiddle = middleLeft.getEncoder();
+    rotationEncoderLeftBack = backLeft.getEncoder();
+    rotationEncoderRightFront = frontRight.getEncoder();
+    rotationEncoderRightMiddle = middleRight.getEncoder();
+    rotationEncoderRightBack = backRight.getEncoder();
+
+    rotationEncoderLeftFront.setPositionConversionFactor((625/168.0)*Math.PI);
+    rotationEncoderRightFront.setPositionConversionFactor((625/168.0)*Math.PI);
+   
     frontLeft.setOpenLoopRampRate(1);
     frontLeft.setClosedLoopRampRate(1);
 
@@ -86,6 +110,29 @@ public class DriveTrain extends SubsystemBase {
    // PIDController test = new PIDController(0.03,0,0);
     //test.setOutput
   }
+
+ public void zeroEncoder(){
+   rotationEncoderLeftFront.setPosition(0);
+   rotationEncoderRightFront.setPosition(0);
+ }
+
+  public int getNearestTargetIndex(){
+    int targetIndex;
+    double currentPosition = getDistToTarget();
+    double smallestDistance = targetShooterPositions[0];
+    for (int i = 1; i < targetShooterPositions.length; i++){
+      if(Math.abs(currentPosition - targetShooterPositions [i]) < Math.abs(currentPosition- smallestDistance)){
+        smallestDistance = targetShooterPositions[i];
+        targetIndex = i;
+      }
+    }
+    return targetIndex;
+  }
+
+  public double getNearestTarget(int i){
+    return targetShooterPositions[i];
+  }
+
 
   public void setSpeed(double leftSpeed, double rightSpeed){
     //frontRight.set(rightSpeed);
@@ -113,9 +160,13 @@ public class DriveTrain extends SubsystemBase {
     gyro.zeroYaw();
   }
 
-  public void driveToDistance(){
-     // driveTrainPIDLeft.setReference(rotations, ControlType.kPosition);
-      //driveTrainPIDRight.setReference(rotations, ControlType.kPosition);
+  public double getDistToTarget(){
+		return (targetHeight - height) /Math.tan(Math.toRadians(Limelight.getTy() + kMountAngle));
+  }
+
+  public void driveToDistance(double rotations){
+    driveTrainPIDLeft.setReference(rotations, ControlType.kPosition);
+    driveTrainPIDRight.setReference(rotations, ControlType.kPosition);
       
   }
 

@@ -15,17 +15,19 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.IntakeBall;
 import frc.robot.commands.MoveHood;
-import frc.robot.commands.ShootBall;
+import frc.robot.commands.AlignShooter;
+import frc.robot.commands.ApproachTarget;
 import frc.robot.commands.SpinCerealizer;
 import frc.robot.commands.TurnToTarget;
 import frc.robot.commands.TurnToTarget;
-import frc.robot.commands.MoveHood.HoodPosition;
+import frc.robot.subsystems.Shooter.HoodPosition;
 import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -95,6 +97,7 @@ public class RobotContainer {
 
     intake.setDefaultCommand(new RunCommand(() -> intake.setRollerSpeed(0), intake));
 
+    shooter.setDefaultCommand(new RunCommand(() -> shooter.setVelocity()));
     //shooter.setDefaultCommand(new RunCommand(() ->
     // shooter.setSpeed(getSpeedFromSlider()), shooter));
 
@@ -138,12 +141,14 @@ public class RobotContainer {
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
     new JoystickButton(joystickRight, 9)
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(-getSpeedForIntake()), intake));
-    new JoystickButton(joystickRight, 1)
-        .whileHeld(new ShootBall(shooter));
     new JoystickButton(joystickLeft, 1)
         .whenPressed(new MoveHood(shooter, HoodPosition.UP));
     new JoystickButton(joystickLeft, 2)
         .whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
+    new JoystickButton(joystickLeft, 3)
+        .toggleWhenPressed(new ParallelCommandGroup(new AlignShooter(shooter, driveTrain), 
+          new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE)));
+    
   }
 
   /**

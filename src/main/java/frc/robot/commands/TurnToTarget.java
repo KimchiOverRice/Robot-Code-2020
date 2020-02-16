@@ -26,9 +26,9 @@ public class TurnToTarget extends PIDCommand {
         // The controller that the command will use
         new PIDController(.04, 0, .0009),
         // This should return the measurement
-        () -> driveTrain.getCurrentAngle(),
+        () -> driveTrain.getCurrentAngle(), //getDistanceFromTarget
         // This should return the setpoint (can also be a constant)
-        () -> driveTrain.getTargetAngle(),
+        () -> driveTrain.getTargetAngle(), //getTargetDistance
         // This uses the output
         output -> {
           // Use the output here
@@ -38,7 +38,7 @@ public class TurnToTarget extends PIDCommand {
           else if(output>0){
             output = output + DriveTrain.MIN_POWER; 
           }
-          driveTrain.setSpeed(output, -output);
+          driveTrain.setSpeed(output, -output); //driveTrain.driveToDistance(output)
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.

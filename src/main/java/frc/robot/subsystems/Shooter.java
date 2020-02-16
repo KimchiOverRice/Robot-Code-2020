@@ -30,10 +30,13 @@ public class Shooter extends SubsystemBase {
   final Compressor compressor = new Compressor(Constants.compressor);
   final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.leftSolenoidP1,Constants.leftSolenoidP2);
   final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.rightSolenoidP1,Constants.rightSolenoidP2);
+  
+  public enum HoodPosition { UP , DOWN };
 
-  private static final double height = 0;
-  private static final double kMountAngle = 0;
-  private double targetHeight = 2.5; //98.5/12
+  private double[] flywheelVelocities = {200, 170};
+  private double flywheelVelocity;
+  private int velocityIndex;
+  final double VELOCITY_CONSTANT = 20;
   
   private CANEncoder encoder;
   private CANPIDController flyWheelPIDController;
@@ -68,9 +71,14 @@ public class Shooter extends SubsystemBase {
     encoder = flywheelLeft.getEncoder();
     flywheelRight.follow(flywheelLeft, true);
     //Shuffleboard.getTab("Testing").add("Velocity", encoder);
+
   }
 
-  public double getVelocity(){
+  public double getTargetFlywheelVelocity(){
+    return flywheelVelocity;
+  }
+
+  public double getCurrentShooterVelocity(){
     //System.out.println(encoder.getVelocity());
     return encoder.getVelocity();
   }
@@ -88,8 +96,8 @@ public class Shooter extends SubsystemBase {
     //SmartDashboard.putNumber("Shooter Velocity", getVelocity());
     rpmDisplay.setDouble(encoder.getVelocity());
     compressor.start();
-
-    setVelocity(velocity.getDouble(0));
+    goToTargetHoodPosition();
+  
   }
 
   public void hoodDown() {
@@ -106,11 +114,25 @@ public class Shooter extends SubsystemBase {
     compressor.start();
   }
 
-  public void setVelocity(double velocity) {
-    flyWheelPIDController.setReference(velocity, ControlType.kVelocity);
+  public void setVelocity() {
+    flyWheelPIDController.setReference(flywheelVelocity, ControlType.kVelocity);
+    
   }
-  public double getDistToTarget(){
-		return (targetHeight - height) /Math.tan(Math.toRadians(Limelight.getTy() + kMountAngle));
+
+  public double getFlywheelTargetVelocity(){
+    return flywheelVelocities[velocityIndex];
   }
+
+  public void setFlywheelVelocityIndex(int i){
+    velocityIndex = i;
+  }
+
+  public void goToTargetHoodPosition(){
+    if(getFlywheelTargetVelocity() > VELOCITY_CONSTANT){
+      hoodDown();
+    }else hoodUp();
+  }
+
+ 
 
 }
