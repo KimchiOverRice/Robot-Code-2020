@@ -24,11 +24,12 @@ public class ApproachTarget extends CommandBase {
   private DriveTrain driveTrain;
 
   //private NetworkTableEntry limelightDis;
-  public ApproachTarget(Shooter shooter) {
+  public ApproachTarget(Shooter shooter, DriveTrain driveTrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
     this.shooter = shooter;
-    distanceToTarget = driveTrain.getDistToTarget();
+    this.driveTrain = driveTrain;
+    distanceToTarget = Limelight.getDistToTarget();
   }
 
   // Called when the command is initially scheduled.
@@ -36,14 +37,14 @@ public class ApproachTarget extends CommandBase {
   public void initialize() {
     driveTrain.zeroEncoder();
     targetDistance = driveTrain.getNearestTarget(driveTrain.getNearestTargetIndex());
-    shooter.setFlywheelVelocityIndex(driveTrain.getNearestTargetIndex());
+    shooter.setTargetFlywheelVelocity(driveTrain.getNearestTargetIndex());
+
     shooter.goToTargetHoodPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Limelight Distance", driveTrain.getDistToTarget());
     driveTrain.driveToDistance(distanceToTarget-targetDistance);
 
   }
@@ -57,7 +58,7 @@ public class ApproachTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Math.abs(driveTrain.getDistToTarget() - targetDistance) <= .25){
+    if(Math.abs(Limelight.getDistToTarget() - targetDistance) <= .25){
       return true;
     }
     return false;

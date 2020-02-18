@@ -8,24 +8,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.HoodPosition;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class AlignShooter extends SequentialCommandGroup {
+public class ShootBall extends SequentialCommandGroup {
   /**
-   * Creates a new alignShooter.
+   * Creates a new ShootBall.
    */
-  
-  public AlignShooter(Shooter shooter, DriveTrain driveTrain) {
-    super(new ApproachTarget(shooter, driveTrain), new TurnToTarget(driveTrain));
+
+  public ShootBall(Shooter shooter, Cerealizer cerealizer) {
+
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    // super(new ShootBall(shooter), new  );
-
+    super(new WaitForFlywheel(shooter), new SendBallToShooter(cerealizer));
+    //new SendBallToShooter(3, cerealizer)
   }
-
-
 }

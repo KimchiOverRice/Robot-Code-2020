@@ -24,7 +24,7 @@ import frc.robot.Constants;
 public class Cerealizer extends SubsystemBase {
   boolean[] holesFilled = new boolean[5];
 
-  final CANSparkMax inAndOut = new CANSparkMax(Constants.ejectBall, MotorType.kBrushless);
+  final CANSparkMax ejectMotor = new CANSparkMax(Constants.ejectBall, MotorType.kBrushless);
   final CANSparkMax cerealMotor1 = new CANSparkMax(Constants.spin1, MotorType.kBrushless);
   final CANSparkMax cerealMotor2 = new CANSparkMax(Constants.spin2, MotorType.kBrushless);
   final CANEncoder rotationEncoder;
@@ -80,6 +80,14 @@ public class Cerealizer extends SubsystemBase {
 
   public void stopCerealMotor() {
     cerealMotor1.stopMotor();
+  }
+
+  public void startEjectMotor(){
+    ejectMotor.set(.5);
+  }
+
+  public void stopEjectMotor(){
+    ejectMotor.stopMotor();
   }
 
   public double getRotationPosition() {

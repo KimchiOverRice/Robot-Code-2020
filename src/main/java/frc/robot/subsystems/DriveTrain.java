@@ -46,9 +46,6 @@ public class DriveTrain extends SubsystemBase {
   final CANEncoder rotationEncoderRightBack;
 
   private double[] targetShooterPositions = {25.0 , 17.0 };
-  private static final double height = 0;
-  private static final double kMountAngle = 0;
-  private double targetHeight = 2.5; //98.5/12
 
 
   AHRS gyro = new AHRS(SerialPort.Port.kMXP);
@@ -117,8 +114,8 @@ public class DriveTrain extends SubsystemBase {
  }
 
   public int getNearestTargetIndex(){
-    int targetIndex;
-    double currentPosition = getDistToTarget();
+    int targetIndex = 0;
+    double currentPosition = Limelight.getDistToTarget();
     double smallestDistance = targetShooterPositions[0];
     for (int i = 1; i < targetShooterPositions.length; i++){
       if(Math.abs(currentPosition - targetShooterPositions [i]) < Math.abs(currentPosition- smallestDistance)){
@@ -160,10 +157,6 @@ public class DriveTrain extends SubsystemBase {
     gyro.zeroYaw();
   }
 
-  public double getDistToTarget(){
-		return (targetHeight - height) /Math.tan(Math.toRadians(Limelight.getTy() + kMountAngle));
-  }
-
   public void driveToDistance(double rotations){
     driveTrainPIDLeft.setReference(rotations, ControlType.kPosition);
     driveTrainPIDRight.setReference(rotations, ControlType.kPosition);
@@ -173,7 +166,7 @@ public class DriveTrain extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Gyro Angle", getCurrentAngle());
- 
+    SmartDashboard.putNumber("Limelight Distance", Limelight.getDistToTarget());
     // This method will be called once per scheduler run
   }
 }

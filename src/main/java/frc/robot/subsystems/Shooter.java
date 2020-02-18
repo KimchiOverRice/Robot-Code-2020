@@ -34,15 +34,16 @@ public class Shooter extends SubsystemBase {
   public enum HoodPosition { UP , DOWN };
 
   private double[] flywheelVelocities = {200, 170};
-  private double flywheelVelocity;
-  private int velocityIndex;
-  final double VELOCITY_CONSTANT = 20;
+  private double flywheelTargetVelocity;
+  public final double LOW_HOOD_MAX_VELOCITY = 20;
   
   private CANEncoder encoder;
   private CANPIDController flyWheelPIDController;
   NetworkTableEntry rpmDisplay, leftCurrent, rightCurrent, leftVoltage, rightVoltage, velocity;
 
   public Shooter() {
+    flywheelTargetVelocity = 0;
+
     flywheelLeft.restoreFactoryDefaults();
     flywheelRight.restoreFactoryDefaults();
 
@@ -75,7 +76,11 @@ public class Shooter extends SubsystemBase {
   }
 
   public double getTargetFlywheelVelocity(){
-    return flywheelVelocity;
+    return flywheelTargetVelocity;
+  }
+
+  public void setTargetFlywheelVelocity(int index){
+    flywheelTargetVelocity = flywheelVelocities[index];
   }
 
   public double getCurrentShooterVelocity(){
@@ -88,16 +93,6 @@ public class Shooter extends SubsystemBase {
     //System.out.println(leftWheel.getOutputCurrent());
     flywheelLeft.set(speed);
     //rightWheel.set(-speed);
-  }
-
-
-  @Override
-  public void periodic() {
-    //SmartDashboard.putNumber("Shooter Velocity", getVelocity());
-    rpmDisplay.setDouble(encoder.getVelocity());
-    compressor.start();
-    goToTargetHoodPosition();
-  
   }
 
   public void hoodDown() {
@@ -114,25 +109,31 @@ public class Shooter extends SubsystemBase {
     compressor.start();
   }
 
-  public void setVelocity() {
-    flyWheelPIDController.setReference(flywheelVelocity, ControlType.kVelocity);
+  public void flywheelPIDToTargetVelocity() {
+    flyWheelPIDController.setReference(flywheelTargetVelocity, ControlType.kVelocity);
     
   }
 
-  public double getFlywheelTargetVelocity(){
-    return flywheelVelocities[velocityIndex];
-  }
-
-  public void setFlywheelVelocityIndex(int i){
-    velocityIndex = i;
-  }
-
   public void goToTargetHoodPosition(){
-    if(getFlywheelTargetVelocity() > VELOCITY_CONSTANT){
+    if(getTargetFlywheelVelocity() > LOW_HOOD_MAX_VELOCITY)
+      hoodUp();
+    else 
       hoodDown();
-    }else hoodUp();
   }
 
- 
+  public void stopFlywheel(){
+    flywheelTargetVelocity = 0;
+  }
+
+  public boolean flywheelAtTargetVelocity(){
+    return Math.abs(getTargetFlywheelVelocity()-getTargetFlywheelVelocity())<1;
+  }
+
+  @Override
+  public void periodic() {
+    //SmartDashboard.putNumber("Shooter Velocity", getVelocity());
+    rpmDisplay.setDouble(encoder.getVelocity());
+    //compressor.start();
+  }
 
 }

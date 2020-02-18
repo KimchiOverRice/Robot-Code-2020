@@ -18,6 +18,7 @@ import frc.robot.commands.MoveHood;
 import frc.robot.commands.AlignShooter;
 import frc.robot.commands.ApproachTarget;
 import frc.robot.commands.SpinCerealizer;
+import frc.robot.commands.ToggleShooterMode;
 import frc.robot.commands.TurnToTarget;
 import frc.robot.commands.TurnToTarget;
 import frc.robot.subsystems.Shooter.HoodPosition;
@@ -97,9 +98,7 @@ public class RobotContainer {
 
     intake.setDefaultCommand(new RunCommand(() -> intake.setRollerSpeed(0), intake));
 
-    shooter.setDefaultCommand(new RunCommand(() -> shooter.setVelocity()));
-    //shooter.setDefaultCommand(new RunCommand(() ->
-    // shooter.setSpeed(getSpeedFromSlider()), shooter));
+    shooter.setDefaultCommand(new RunCommand(() -> shooter.flywheelPIDToTargetVelocity(), shooter));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -146,8 +145,7 @@ public class RobotContainer {
     new JoystickButton(joystickLeft, 2)
         .whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
     new JoystickButton(joystickLeft, 3)
-        .toggleWhenPressed(new ParallelCommandGroup(new AlignShooter(shooter, driveTrain), 
-          new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE)));
+        .toggleWhenPressed(new ToggleShooterMode(cerealizer, shooter, driveTrain));
     
   }
 
