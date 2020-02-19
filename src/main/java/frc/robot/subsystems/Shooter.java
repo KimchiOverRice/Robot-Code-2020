@@ -126,7 +126,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean flywheelAtTargetVelocity(){
-    return Math.abs(getTargetFlywheelVelocity()-getTargetFlywheelVelocity())<1;
+    return Math.abs(getTargetFlywheelVelocity()-getCurrentShooterVelocity())<1;
   }
 
   @Override
