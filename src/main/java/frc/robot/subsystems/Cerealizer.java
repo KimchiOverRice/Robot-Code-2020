@@ -172,9 +172,9 @@ public class Cerealizer extends SubsystemBase {
       holesFilled[a] = holeToggles[a].getBoolean(false);
       SmartDashboard.putBoolean("holes filled " + a, holesFilled[a]);
     }
-    SmartDashboard.putNumber("hole Number intake", getCurrentHole(Mode.INTAKE));
-    SmartDashboard.putNumber("hole Number shooter", getCurrentHole(Mode.SHOOTER));
-    SmartDashboard.putNumber("Cereal Pos", rotationEncoder.getPosition());
-    SmartDashboard.putNumber("spin Velocity", rotationEncoder.getVelocity());
+    //SmartDashboard.putNumber("hole Number intake", getCurrentHole(Mode.INTAKE));
+    //SmartDashboard.putNumber("hole Number shooter", getCurrentHole(Mode.SHOOTER));
+    //SmartDashboard.putNumber("Cereal Pos", rotationEncoder.getPosition());
+    //SmartDashboard.putNumber("spin Velocity", rotationEncoder.getVelocity());
   }
 }

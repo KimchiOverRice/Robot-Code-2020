@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.Shooter;
@@ -24,7 +25,7 @@ public class ShootBall extends SequentialCommandGroup {
 
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new WaitForFlywheel(shooter), new SendBallToShooter(cerealizer));
+    super(new WaitForFlywheel(shooter), new RunCommand(()->cerealizer.startEjectMotor(), cerealizer).withTimeout(5));
     //new SendBallToShooter(3, cerealizer)
   }
 }

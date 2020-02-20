@@ -25,8 +25,8 @@ import frc.robot.Constants;
 import frc.robot.Limelight;
 
 public class Shooter extends SubsystemBase {
-  final CANSparkMax flywheelLeft = new CANSparkMax(Constants.leftWheels, MotorType.kBrushless);
-  final CANSparkMax flywheelRight = new CANSparkMax(Constants.rightWheels, MotorType.kBrushless);
+  final CANSparkMax flywheelLeft = new CANSparkMax(Constants.flywheelleft, MotorType.kBrushless);
+  final CANSparkMax flywheelRight = new CANSparkMax(Constants.flywheelRight, MotorType.kBrushless);
   final Compressor compressor = new Compressor(Constants.compressor);
   final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.leftSolenoidP1,Constants.leftSolenoidP2);
   final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.rightSolenoidP1,Constants.rightSolenoidP2);
@@ -37,12 +37,12 @@ public class Shooter extends SubsystemBase {
   private double flywheelTargetVelocity;
   public final double LOW_HOOD_MAX_VELOCITY = 20;
   
-  private CANEncoder encoder;
+  private CANEncoder flywheelEncoder;
   private CANPIDController flyWheelPIDController;
   NetworkTableEntry rpmDisplay, leftCurrent, rightCurrent, leftVoltage, rightVoltage, velocity;
 
   public Shooter() {
-    flywheelTargetVelocity = 0;
+    flywheelTargetVelocity = 200;
 
     flywheelLeft.restoreFactoryDefaults();
     flywheelRight.restoreFactoryDefaults();
@@ -69,7 +69,7 @@ public class Shooter extends SubsystemBase {
 
 
     //testMotor.enableVoltageCompensation(12);
-    encoder = flywheelLeft.getEncoder();
+    flywheelEncoder = flywheelLeft.getEncoder();
     flywheelRight.follow(flywheelLeft, true);
     //Shuffleboard.getTab("Testing").add("Velocity", encoder);
 
@@ -85,7 +85,7 @@ public class Shooter extends SubsystemBase {
 
   public double getCurrentShooterVelocity(){
     //System.out.println(encoder.getVelocity());
-    return encoder.getVelocity();
+    return flywheelEncoder.getVelocity();
   }
 
   public void setSpeed(double speed)
@@ -132,7 +132,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     //SmartDashboard.putNumber("Shooter Velocity", getVelocity());
-    rpmDisplay.setDouble(encoder.getVelocity());
+    rpmDisplay.setDouble(flywheelEncoder.getVelocity());
     //compressor.start();
   }
 

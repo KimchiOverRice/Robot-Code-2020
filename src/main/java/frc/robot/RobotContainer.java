@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.IntakeBall;
 import frc.robot.commands.MoveHood;
+import frc.robot.commands.ShootBall;
 import frc.robot.commands.AlignShooter;
 import frc.robot.commands.ApproachTarget;
 import frc.robot.commands.SpinCerealizer;
@@ -146,6 +147,8 @@ public class RobotContainer {
         .whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
     new JoystickButton(joystickLeft, 3)
         .toggleWhenPressed(new ToggleShooterMode(cerealizer, shooter, driveTrain));
+    new JoystickButton(joystickRight, 12)
+        .toggleWhenPressed(new ShootBall(shooter, cerealizer));
     
   }
 
