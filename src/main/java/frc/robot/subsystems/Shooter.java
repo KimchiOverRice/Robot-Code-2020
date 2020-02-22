@@ -39,10 +39,10 @@ public class Shooter extends SubsystemBase {
   
   private CANEncoder flywheelEncoder;
   private CANPIDController flyWheelPIDController;
-  NetworkTableEntry rpmDisplay, leftCurrent, rightCurrent, leftVoltage, rightVoltage, velocity;
+  NetworkTableEntry rpmDisplay, leftCurrent, rightCurrent, leftVoltage, rightVoltage, velocity, targetVelocity;
 
   public Shooter() {
-    flywheelTargetVelocity = 200;
+    flywheelTargetVelocity = 0;
 
     flywheelLeft.restoreFactoryDefaults();
     flywheelRight.restoreFactoryDefaults();
@@ -52,6 +52,7 @@ public class Shooter extends SubsystemBase {
     leftCurrent = Shuffleboard.getTab("Testing").add("Left Current", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
     rightVoltage = Shuffleboard.getTab("Testing").add("Right Voltage", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
     velocity = Shuffleboard.getTab("Testing").add("Velocity", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+    targetVelocity = Shuffleboard.getTab("Testing").add("Flywheel Target Velocity", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
     flyWheelPIDController = flywheelLeft.getPIDController();
     flyWheelPIDController.setP(0.0001);
@@ -81,6 +82,7 @@ public class Shooter extends SubsystemBase {
 
   public void setTargetFlywheelVelocity(int index){
     flywheelTargetVelocity = flywheelVelocities[index];
+    System.out.print(index);
   }
 
   public double getCurrentShooterVelocity(){
@@ -129,10 +131,12 @@ public class Shooter extends SubsystemBase {
     return Math.abs(getTargetFlywheelVelocity()-getCurrentShooterVelocity())<1;
   }
 
+
   @Override
   public void periodic() {
     //SmartDashboard.putNumber("Shooter Velocity", getVelocity());
     rpmDisplay.setDouble(flywheelEncoder.getVelocity());
+    targetVelocity.setDouble(flywheelTargetVelocity);
     //compressor.start();
   }
 

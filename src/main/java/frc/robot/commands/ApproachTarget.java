@@ -26,7 +26,8 @@ public class ApproachTarget extends CommandBase {
   //private NetworkTableEntry limelightDis;
   public ApproachTarget(Shooter shooter, DriveTrain driveTrain) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+    //addRequirements(shooter);
+    addRequirements(driveTrain);
     this.shooter = shooter;
     this.driveTrain = driveTrain;
     distanceToTarget = Limelight.getDistToTarget();

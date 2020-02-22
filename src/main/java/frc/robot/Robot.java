@@ -50,6 +50,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     robotContainer.setShooterSpeedDisplay(robotContainer.getSpeedFromSlider());
     CommandScheduler.getInstance().run();
+    SmartDashboard.putData("command scheduler", CommandScheduler.getInstance());
   }
 
   /**

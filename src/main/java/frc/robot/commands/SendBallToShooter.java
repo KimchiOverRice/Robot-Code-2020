@@ -46,6 +46,6 @@ public class SendBallToShooter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Timer.getFPGATimestamp() - startTime) >= timeout;
+    return false;
   }
 }

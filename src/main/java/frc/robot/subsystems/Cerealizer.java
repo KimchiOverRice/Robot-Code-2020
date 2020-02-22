@@ -58,6 +58,8 @@ public class Cerealizer extends SubsystemBase {
     cerealMotor1.setOpenLoopRampRate(1);
     cerealMotor1.setClosedLoopRampRate(1);
     cerealMotor2.follow(cerealMotor1);
+    ejectMotor.setOpenLoopRampRate(1);
+    ejectMotor.setClosedLoopRampRate(1);
     
 
     breakSensorDisplay = Shuffleboard.getTab("Testing").add("break beam sensor 1", false)

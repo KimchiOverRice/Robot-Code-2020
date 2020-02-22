@@ -31,6 +31,7 @@ public class WaitForFlywheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("waiting for flywheel");
   }
 
 
@@ -44,4 +45,5 @@ public class WaitForFlywheel extends CommandBase {
   public boolean isFinished() {
     return shooter.flywheelAtTargetVelocity();
   }
+  
 }

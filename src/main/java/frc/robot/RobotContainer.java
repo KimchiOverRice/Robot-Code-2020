@@ -28,6 +28,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -123,7 +124,7 @@ public class RobotContainer {
     // new JoystickButton(joystickRight, 3).whenPressed(new
     // InstantCommand(intake::intakeUp, intake));
 
-    new JoystickButton(joystickRight, 3)
+    new JoystickButton(joystickLeft, 3)
         .whileHeld(new RunCommand(() -> cerealizer.setSpeedCerealizer(getSpeedForCerealizer()), cerealizer));
     new JoystickButton(joystickRight, 5)
         .whileHeld(new RunCommand(() -> cerealizer.setSpeedCerealizer(-getSpeedForCerealizer()), cerealizer));
@@ -145,10 +146,10 @@ public class RobotContainer {
         .whenPressed(new MoveHood(shooter, HoodPosition.UP));
     new JoystickButton(joystickLeft, 2)
         .whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
-    new JoystickButton(joystickLeft, 3)
-        .toggleWhenPressed(new ToggleShooterMode(cerealizer, shooter, driveTrain));
+    new JoystickButton(joystickRight, 3)
+        .whenPressed(new ConditionalCommand(new ToggleShooterMode(cerealizer, shooter, driveTrain), new InstantCommand(() -> shooter.stopFlywheel()),() -> shooter.getTargetFlywheelVelocity() == 0 ));
     new JoystickButton(joystickRight, 12)
-        .toggleWhenPressed(new ShootBall(shooter, cerealizer));
+        .whenPressed(new ShootBall(shooter, cerealizer));
     
   }
 
