@@ -49,7 +49,7 @@ public class Cerealizer extends SubsystemBase {
 
     rotationEncoder = cerealMotor1.getEncoder();
     pidController = cerealMotor1.getPIDController();
-    setEncoderPosition(0);
+    zeroEncoder();
     pidController.setP(0.01);
     pidController.setI(1e-6);
     pidController.setD(0);
@@ -76,8 +76,8 @@ public class Cerealizer extends SubsystemBase {
     return positionZeroLimit.get();
   }
 
-  public void setEncoderPosition(double rotationPosition) {
-    rotationEncoder.setPosition(rotationPosition);
+  public void zeroEncoder() {
+    rotationEncoder.setPosition(0);
   }
 
   public void stopCerealMotor() {
