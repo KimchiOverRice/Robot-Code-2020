@@ -92,6 +92,10 @@ public class Cerealizer extends SubsystemBase {
     ejectMotor.stopMotor();
   }
 
+  public void ejectMotorKeepBallIn(){ 
+    ejectMotor.set(-.1);
+  }
+
   public double getRotationPosition() {
     return rotationEncoder.getPosition();
   }

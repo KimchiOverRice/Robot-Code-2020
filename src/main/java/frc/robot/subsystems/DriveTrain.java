@@ -163,6 +163,10 @@ public class DriveTrain extends SubsystemBase {
       
   }
 
+  public void stopDrivetrain(){
+    setSpeed(0,0);
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Gyro Angle", getCurrentAngle());

@@ -18,6 +18,7 @@ import frc.robot.commands.MoveHood;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.AlignShooter;
 import frc.robot.commands.ApproachTarget;
+import frc.robot.commands.ExitShooterMode;
 import frc.robot.commands.SpinCerealizer;
 import frc.robot.commands.ToggleShooterMode;
 import frc.robot.commands.TurnToTarget;
@@ -53,9 +54,10 @@ public class RobotContainer {
   final Cerealizer cerealizer = new Cerealizer();
   Joystick joystickLeft = new Joystick(1);
   Joystick joystickRight = new Joystick(2);
-  //JoystickButton joystickbuttonRight = new JoystickButton(joystickRight, 2);
+  // JoystickButton joystickbuttonRight = new JoystickButton(joystickRight, 2);
   TurnToTarget turnToTarget = new TurnToTarget(driveTrain);
   private NetworkTableEntry shooterSpeedDisplay;
+
 
   private NetworkTableEntry shooterSpeedSlider, cerealizerSpeedSlider, intakeRollerSlider;
 
@@ -147,11 +149,10 @@ public class RobotContainer {
     new JoystickButton(joystickLeft, 2)
         .whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
     new JoystickButton(joystickRight, 3)
-        .whenPressed(new ConditionalCommand(new ToggleShooterMode(cerealizer, shooter, driveTrain), new InstantCommand(() -> shooter.stopFlywheel()),() -> shooter.getTargetFlywheelVelocity() == 0 ));
+        .whenPressed(new ConditionalStartCommand(new ToggleShooterMode(cerealizer, shooter, driveTrain), 
+        new ExitShooterMode(driveTrain, shooter),() -> shooter.getTargetFlywheelVelocity() == 0 ));
     new JoystickButton(joystickRight, 12)
         .whenPressed(new ShootBall(shooter, cerealizer));
-    
-  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -162,4 +163,5 @@ public class RobotContainer {
    * public Command getAutonomousCommand() { // An ExampleCommand will run in
    * autonomous return m_autoCommand; }
    */
+  }
 }
