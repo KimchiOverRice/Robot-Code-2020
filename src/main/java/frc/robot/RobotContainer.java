@@ -147,7 +147,7 @@ public class RobotContainer {
     new JoystickButton(joystickLeft, 2)
         .whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
     new JoystickButton(joystickRight, 3)
-        .whenPressed(new ConditionalCommand(new ToggleShooterMode(cerealizer, shooter, driveTrain), new InstantCommand(() -> shooter.stopFlywheel()),() -> shooter.getTargetFlywheelVelocity() == 0 ));
+        .whenPressed(new ConditionalStartCommand(new ToggleShooterMode(cerealizer, shooter, driveTrain), new InstantCommand(() -> shooter.stopFlywheel()),() -> shooter.getTargetFlywheelVelocity() == 0 ));
     new JoystickButton(joystickRight, 12)
         .whenPressed(new ShootBall(shooter, cerealizer));
     
