@@ -15,11 +15,16 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,12 +50,16 @@ public class DriveTrain extends SubsystemBase {
   final CANEncoder rotationEncoderRightMiddle;
   final CANEncoder rotationEncoderRightBack;
 
+ 
+
   private double[] targetShooterPositions = {25.0 , 17.0 };
 
 
   AHRS gyro = new AHRS(SerialPort.Port.kMXP);
 
   DifferentialDrive driveTrain;
+  DifferentialDriveKinematics kinematics;
+  DifferentialDriveOdometry odometry;
 
   NetworkTableEntry proportionSlider;
   public static final double DEFAULT_SPEED_CONST = 0.01;
@@ -63,6 +72,13 @@ public class DriveTrain extends SubsystemBase {
     frontRight.restoreFactoryDefaults();
     middleRight.restoreFactoryDefaults();
     backRight.restoreFactoryDefaults();
+
+    frontLeft.setIdleMode(IdleMode.kBrake);
+    middleLeft.setIdleMode(IdleMode.kBrake);
+    backLeft.setIdleMode(IdleMode.kBrake);
+    frontRight.setIdleMode(IdleMode.kBrake);
+    middleRight.setIdleMode(IdleMode.kBrake);
+    backRight.setIdleMode(IdleMode.kBrake);
 
     middleLeft.follow(frontLeft);
     backLeft.follow(frontLeft);
@@ -104,6 +120,8 @@ public class DriveTrain extends SubsystemBase {
     driveTrain = new DifferentialDrive(frontLeft, frontRight);
     driveTrain.setDeadband(0.1);
 
+    odometry = new DifferentialDriveOdometry(getPosition2D());
+
    // PIDController test = new PIDController(0.03,0,0);
     //test.setOutput
   }
@@ -126,6 +144,10 @@ public class DriveTrain extends SubsystemBase {
     return targetIndex;
   }
 
+  public Pose2d getRobotPosition(){
+    return odometry.getPoseMeters();
+  }
+
   public double getNearestTarget(int i){
     return targetShooterPositions[i];
   }
@@ -141,6 +163,7 @@ public class DriveTrain extends SubsystemBase {
 
   }
 
+
   public double getP(){
     return proportionSlider.getDouble(0);
   }
@@ -151,6 +174,10 @@ public class DriveTrain extends SubsystemBase {
 
   public double getCurrentAngle(){
     return gyro.getAngle();
+  }
+
+  public Rotation2d getPosition2D(){
+    return Rotation2d.fromDegrees(-gyro.getAngle());
   }
 
   public void zeroGyro(){
@@ -172,5 +199,6 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Angle", getCurrentAngle());
     SmartDashboard.putNumber("Limelight Distance", Limelight.getDistToTarget());
     // This method will be called once per scheduler run
+    odometry.update(getPosition2D()), rotationEncoderLeftFront.getDistance(), rotationEncoderRightFront.getDistance());
   }
 }

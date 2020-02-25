@@ -26,7 +26,7 @@ public class AutoRight extends SequentialCommandGroup {
 
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    addCommands(new ZeroCerealizerPosition(cerealizer), new EnterShooterMode(cerealizer, shooter, drivetrain), new ShootBall(shooter, cerealizer));
+    addCommands(new ZeroCerealizerPosition(cerealizer), new EnterShooterMode(cerealizer, shooter, drivetrain), new ShootBall(shooter, cerealizer), new ShootBall(shooter, cerealizer), new ShootBall(shooter, cerealizer));
 
   }
 }
