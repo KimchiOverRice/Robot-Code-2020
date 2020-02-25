@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Cerealizer;
 
-public class ZeroPosition extends CommandBase {
+public class ZeroCerealizerPosition extends CommandBase {
   /**
    * Creates a new ZeroPosition.
    */
@@ -20,7 +20,7 @@ public class ZeroPosition extends CommandBase {
   int timeout;
   Timer timer = new Timer();
 
-  public ZeroPosition(Cerealizer cerealizer) {
+  public ZeroCerealizerPosition(Cerealizer cerealizer) {
     // Use addRequirements() here to declare subsystem dependencies.
     
 
