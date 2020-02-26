@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
 
@@ -20,6 +22,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -27,6 +30,11 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Limelight;
@@ -38,8 +46,7 @@ public class DriveTrain extends SubsystemBase {
   final CANSparkMax middleRight = new CANSparkMax(Constants.middleRight, MotorType.kBrushless);
   final CANSparkMax backLeft = new CANSparkMax(Constants.backLeft, MotorType.kBrushless);
   final CANSparkMax backRight = new CANSparkMax(Constants.backRight, MotorType.kBrushless);
-  
-  
+
   private CANPIDController driveTrainPIDLeft;
   private CANPIDController driveTrainPIDRight;
 
@@ -50,16 +57,16 @@ public class DriveTrain extends SubsystemBase {
   final CANEncoder rotationEncoderRightMiddle;
   final CANEncoder rotationEncoderRightBack;
 
- 
-
-  private double[] targetShooterPositions = {25.0 , 17.0 };
-
+  private double[] targetShooterPositions = { 25.0, 17.0 };
 
   AHRS gyro = new AHRS(SerialPort.Port.kMXP);
 
   DifferentialDrive driveTrain;
-  DifferentialDriveKinematics kinematics;
+  DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(.61);
   DifferentialDriveOdometry odometry;
+  DifferentialDriveVoltageConstraint voltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(1,1,1), kinematics, 10);
+  TrajectoryConfig trajectoryConfig = new TrajectoryConfig(1, 1).setKinematics(kinematics)
+      .addConstraint(voltageConstraint);
 
   NetworkTableEntry proportionSlider;
   public static final double DEFAULT_SPEED_CONST = 0.01;
@@ -104,6 +111,8 @@ public class DriveTrain extends SubsystemBase {
 
     rotationEncoderLeftFront.setPositionConversionFactor((625/168.0)*Math.PI);
     rotationEncoderRightFront.setPositionConversionFactor((625/168.0)*Math.PI);
+    
+
    
     frontLeft.setOpenLoopRampRate(1);
     frontLeft.setClosedLoopRampRate(1);
@@ -122,9 +131,24 @@ public class DriveTrain extends SubsystemBase {
 
     odometry = new DifferentialDriveOdometry(getPosition2D());
 
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        List.of(
+
+        ),
+        // Pass through these two interior waypoints, making an 's' curve path
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(3, 0, new Rotation2d(0)), trajectoryConfig);
+
+
    // PIDController test = new PIDController(0.03,0,0);
     //test.setOutput
   }
+  public double getPositionInMeter(CANEncoder encoder ){
+    return Units.feetToMeters(encoder.getPosition());
+  }
+
 
  public void zeroEncoder(){
    rotationEncoderLeftFront.setPosition(0);
@@ -189,6 +213,13 @@ public class DriveTrain extends SubsystemBase {
     driveTrainPIDRight.setReference(rotations, ControlType.kPosition);
       
   }
+   
+  public void setVoltage(double voltageLeft, double voltageRight){
+    frontLeft.setVoltage(voltageLeft);
+    frontRight.setVoltage(voltageRight);
+  }
+ 
+
 
   public void stopDrivetrain(){
     setSpeed(0,0);
@@ -199,6 +230,6 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Angle", getCurrentAngle());
     SmartDashboard.putNumber("Limelight Distance", Limelight.getDistToTarget());
     // This method will be called once per scheduler run
-    odometry.update(getPosition2D()), rotationEncoderLeftFront.getDistance(), rotationEncoderRightFront.getDistance());
+    odometry.update(getPosition2D(), getPositionInMeter(rotationEncoderLeftFront), getPositionInMeter(rotationEncoderRightFront));
   }
 }
