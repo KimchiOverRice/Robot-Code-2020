@@ -8,18 +8,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.Shooter;
 
-public class WaitForFlywheel extends CommandBase {
+public class WaitForShooterReady extends CommandBase {
   /**
    * Creates a new checkFlywheel.
    */
 
    
   private Shooter shooter;
+  private Cerealizer cerealizer;
   
-  public WaitForFlywheel(Shooter shooter) {
+  public WaitForShooterReady(Shooter shooter, Cerealizer cerealizer) {
     this.shooter = shooter;
+    this.cerealizer = cerealizer;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -43,7 +46,7 @@ public class WaitForFlywheel extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooter.flywheelAtTargetVelocity();
+    return shooter.flywheelAtTargetVelocity() && !cerealizer.shooterHoleEmpty() ;
   }
   
 }

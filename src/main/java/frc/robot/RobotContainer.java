@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -48,6 +49,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  final Compressor compressor = new Compressor(Constants.compressor);
   final DriveTrain driveTrain = new DriveTrain();
   final Shooter shooter = new Shooter();
   final Intake intake = new Intake();
@@ -120,6 +122,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(joystickRight, 2).whileHeld(new TurnToTarget(driveTrain));
+    new JoystickButton(joystickRight, 11).whenPressed(new InstantCommand (()->compressor.start()));
+    new JoystickButton(joystickRight, 10).whenPressed(new InstantCommand (()->compressor.stop()));
 
     new JoystickButton(joystickLeft, 5).whenPressed(new
       InstantCommand(intake::intakeDown, intake));
