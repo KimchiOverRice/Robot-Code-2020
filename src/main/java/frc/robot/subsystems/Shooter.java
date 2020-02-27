@@ -137,7 +137,7 @@ public class Shooter extends SubsystemBase {
     //SmartDashboard.putNumber("Shooter Velocity", getVelocity());
     rpmDisplay.setDouble(flywheelEncoder.getVelocity());
     targetVelocity.setDouble(flywheelTargetVelocity);
-    //compressor.start();
+    compressor.start();
   }
 
 }

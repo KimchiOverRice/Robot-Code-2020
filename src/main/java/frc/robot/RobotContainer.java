@@ -121,10 +121,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
     new JoystickButton(joystickRight, 2).whileHeld(new TurnToTarget(driveTrain));
 
-    // new JoystickButton(joystickRight, 5).whenPressed(new
-    // InstantCommand(intake::intakeDown, intake));
-    // new JoystickButton(joystickRight, 3).whenPressed(new
-    // InstantCommand(intake::intakeUp, intake));
+    new JoystickButton(joystickLeft, 5).whenPressed(new
+      InstantCommand(intake::intakeDown, intake));
+     new JoystickButton(joystickLeft, 3).whenPressed(new
+     InstantCommand(intake::intakeUp, intake));
 
     new JoystickButton(joystickLeft, 3)
         .whileHeld(new RunCommand(() -> cerealizer.setSpeedCerealizer(getSpeedForCerealizer()), cerealizer));
