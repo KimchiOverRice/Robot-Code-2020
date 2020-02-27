@@ -7,29 +7,26 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.Cerealizer;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Cerealizer.Mode;
-import frc.robot.subsystems.Shooter.HoodPosition;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class ShootBall extends SequentialCommandGroup {
+public class AutoRight extends SequentialCommandGroup {
   /**
-   * Creates a new ShootBall.
+   * Creates a new AutoRight.
    */
 
-  public ShootBall(Shooter shooter, Cerealizer cerealizer) {
+
+  public AutoRight(DriveTrain drivetrain, Shooter shooter, Cerealizer cerealizer) {
+
 
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new SpinCerealizer(cerealizer,Mode.SHOOTER), new WaitForFlywheel(shooter), new StartEndCommand(() -> cerealizer.startEjectMotor(),()  -> cerealizer.stopEjectMotor()).withTimeout(5));
-    //new SendBallToShooter(3, cerealizer)
+    addCommands(new ZeroCerealizerPosition(cerealizer), new EnterShooterMode(cerealizer, shooter, drivetrain), new ShootBall(shooter, cerealizer), new ShootBall(shooter, cerealizer), new ShootBall(shooter, cerealizer));
+
   }
 }
-
-//new RunCommand(()->cerealizer.startEjectMotor(), cerealizer).withTimeout(5)

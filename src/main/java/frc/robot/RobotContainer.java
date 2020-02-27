@@ -20,7 +20,7 @@ import frc.robot.commands.AlignShooter;
 import frc.robot.commands.ApproachTarget;
 import frc.robot.commands.ExitShooterMode;
 import frc.robot.commands.SpinCerealizer;
-import frc.robot.commands.ToggleShooterMode;
+import frc.robot.commands.EnterShooterMode;
 import frc.robot.commands.TurnToTarget;
 import frc.robot.commands.TurnToTarget;
 import frc.robot.subsystems.Shooter.HoodPosition;
@@ -149,7 +149,7 @@ public class RobotContainer {
     new JoystickButton(joystickLeft, 2)
         .whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
     new JoystickButton(joystickRight, 3)
-        .whenPressed(new ConditionalStartCommand(new ToggleShooterMode(cerealizer, shooter, driveTrain), 
+        .whenPressed(new ConditionalStartCommand(new EnterShooterMode(cerealizer, shooter, driveTrain), 
         new ExitShooterMode(driveTrain, shooter),() -> shooter.getTargetFlywheelVelocity() == 0 ));
     new JoystickButton(joystickRight, 12)
         .whenPressed(new ShootBall(shooter, cerealizer));
