@@ -54,7 +54,7 @@ public final class Constants {
 
     //cerealizer
     public static int ejectBall = 15; //10
-    public static int spin1 = 8;
+    public static int spin1 = 10;
     public static int spin2 = 9;
     public static int breakBeamBallInside = 0;
     public static int breakBeamBallMiddle =3;

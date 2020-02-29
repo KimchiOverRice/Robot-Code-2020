@@ -178,6 +178,8 @@ public class Cerealizer extends SubsystemBase {
       holesFilled[a] = holeToggles[a].getBoolean(false);
       SmartDashboard.putBoolean("holes filled " + a, holesFilled[a]);
     }
+
+    SmartDashboard.putBoolean("cerealizer touch sensor", atPositionZero());
     //SmartDashboard.putNumber("hole Number intake", getCurrentHole(Mode.INTAKE));
     //SmartDashboard.putNumber("hole Number shooter", getCurrentHole(Mode.SHOOTER));
     //SmartDashboard.putNumber("Cereal Pos", rotationEncoder.getPosition());
