@@ -27,7 +27,6 @@ import frc.robot.Limelight;
 public class Shooter extends SubsystemBase {
   final CANSparkMax flywheelLeft = new CANSparkMax(Constants.flywheelleft, MotorType.kBrushless);
   final CANSparkMax flywheelRight = new CANSparkMax(Constants.flywheelRight, MotorType.kBrushless);
-  final Compressor compressor = new Compressor(Constants.compressor);
   final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.leftSolenoidP1,Constants.leftSolenoidP2);
   final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.rightSolenoidP1,Constants.rightSolenoidP2);
   
@@ -107,9 +106,9 @@ public class Shooter extends SubsystemBase {
     rightSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 
-  public void compress(){
-    compressor.start();
-  }
+  // public void compress(){
+  //   compressor.start();
+  // }
 
   public void flywheelPIDToTargetVelocity() {
     flyWheelPIDController.setReference(flywheelTargetVelocity, ControlType.kVelocity);
@@ -137,8 +136,7 @@ public class Shooter extends SubsystemBase {
     //SmartDashboard.putNumber("Shooter Velocity", getVelocity());
     rpmDisplay.setDouble(flywheelEncoder.getVelocity());
     targetVelocity.setDouble(flywheelTargetVelocity);
-    //compressor.start();
-    compressor.stop();
+//    compressor.start();
   }
 
 }

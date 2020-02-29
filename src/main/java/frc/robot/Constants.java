@@ -44,7 +44,7 @@ public final class Constants {
 
 
     //shooter
-    public static int flywheelleft = 13; //11
+    public static int flywheelleft = 11; //11
     public static int flywheelRight = 12;
     public static int leftSolenoidP1 = 0;
     public static int leftSolenoidP2 = 1;
@@ -53,8 +53,8 @@ public final class Constants {
     public static int compressor = 0;
 
     //cerealizer
-    public static int ejectBall = 15; //10
-    public static int spin1 = 10;
+    public static int ejectBall = 10; //10
+    public static int spin1 = 8;
     public static int spin2 = 9;
     public static int breakBeamBallInside = 0;
     public static int breakBeamBallMiddle =3;
