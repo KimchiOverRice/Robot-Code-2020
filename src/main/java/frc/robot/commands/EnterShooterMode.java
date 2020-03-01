@@ -23,7 +23,7 @@ public class EnterShooterMode extends ParallelCommandGroup {
    */
   Shooter shooter;
   public EnterShooterMode(Cerealizer cerealizer, Shooter shooter, DriveTrain driveTrain) {
-    super(new AlignShooter(shooter, driveTrain), new SpinCerealizer(cerealizer, Mode.SHOOTER));
+    super(new AlignShooter(shooter, driveTrain), new SpinCerealizer(cerealizer));
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());super();
 

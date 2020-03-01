@@ -18,11 +18,9 @@ public class WaitForShooterReady extends CommandBase {
 
    
   private Shooter shooter;
-  private Cerealizer cerealizer;
   
-  public WaitForShooterReady(Shooter shooter, Cerealizer cerealizer) {
+  public WaitForShooterReady(Shooter shooter) {
     this.shooter = shooter;
-    this.cerealizer = cerealizer;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -46,7 +44,7 @@ public class WaitForShooterReady extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooter.flywheelAtTargetVelocity() && !cerealizer.shooterHoleEmpty() ;
+    return shooter.flywheelAtTargetVelocity();
   }
   
 }

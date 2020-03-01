@@ -17,37 +17,23 @@ public class SpinCerealizer extends CommandBase {
    * Creates a new TurnToEmpty.
    */
   private Cerealizer cerealizer;
-
  
 
-  private Mode mode;
-
-  double numOfRotations, targetPosition, newPosition;
- 
-
-  public SpinCerealizer(Cerealizer cerealizer, Mode mode) {
+  public SpinCerealizer(Cerealizer cerealizer) {
     addRequirements(cerealizer);
     this.cerealizer = cerealizer;
-    this.mode = mode;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPosition = cerealizer.getNearestTargetHole(mode);
-   System.out.println("running");
-   System.out.println(targetPosition);
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    cerealizer.setRotations(targetPosition);
-    newPosition = cerealizer.getRotationPosition();
-    //cerealizer.ejectMotorKeepBallIn(); 
-    SmartDashboard.putNumber("Cereal Target Pos", targetPosition);
+    cerealizer.setSpeedCerealizer(0.2);
   }
 
   // Called once the command ends or is interrupted.
@@ -59,11 +45,6 @@ public class SpinCerealizer extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    if (Math.abs(newPosition - targetPosition) <= 0.25) {
-      return true;
-    }
-
     return false;
   }
 

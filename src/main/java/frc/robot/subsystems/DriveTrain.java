@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -108,10 +109,11 @@ public class DriveTrain extends SubsystemBase {
     rotationEncoderRightFront = frontRight.getEncoder();
     rotationEncoderRightMiddle = middleRight.getEncoder();
     rotationEncoderRightBack = backRight.getEncoder();
-
+    // 50/24  * 50/14 *6/12 *pi = ratio 
     rotationEncoderLeftFront.setPositionConversionFactor((625/168.0)*Math.PI);
     rotationEncoderRightFront.setPositionConversionFactor((625/168.0)*Math.PI);
-    
+    rotationEncoderLeftFront. setVelocityConversionFactor((625/168.0)*Math.PI);
+    rotationEncoderRightFront. setVelocityConversionFactor((625/168.0)*Math.PI);
 
    
     frontLeft.setOpenLoopRampRate(1);
@@ -131,24 +133,19 @@ public class DriveTrain extends SubsystemBase {
 
     odometry = new DifferentialDriveOdometry(getPosition2D());
 
-    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        List.of(
-
-        ),
-        // Pass through these two interior waypoints, making an 's' curve path
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)), trajectoryConfig);
-
-
-   // PIDController test = new PIDController(0.03,0,0);
-    //test.setOutput
   }
   public double getPositionInMeter(CANEncoder encoder ){
     return Units.feetToMeters(encoder.getPosition());
   }
-
+  public double getVelocityInMeterPerSecond(CANEncoder encoder){
+    return Units.feetToMeters(encoder.getVelocity());
+  }
+  public DifferentialDriveKinematics getKinematics(){
+    return kinematics;
+  }
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(getVelocityInMeterPerSecond(rotationEncoderLeftFront),getVelocityInMeterPerSecond(rotationEncoderRightFront));
+  }
 
  public void zeroEncoder(){
    rotationEncoderLeftFront.setPosition(0);

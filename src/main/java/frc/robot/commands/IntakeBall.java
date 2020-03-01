@@ -26,8 +26,6 @@ public class IntakeBall extends CommandBase {
     addRequirements(cerealizer);
     this.intake = intake;
     this.cerealizer = cerealizer;
-
-
   }
 
   // Called when the command is initially scheduled.
@@ -40,28 +38,19 @@ public class IntakeBall extends CommandBase {
   @Override
   public void execute() {
     intake.setRollerSpeed(0.5);
-  
+    cerealizer.setSpeedCerealizer(0.2);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     intake.setRollerSpeed(0);
-    if(!interrupted){
-      cerealizer.setCurrentHoleFull();
-    }
-    
+    cerealizer.setSpeedCerealizer(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    if(cerealizer.intakeHoleFull()){
-      if(intake.fullyIn()){
-       return true; 
-      }
-    }
     return false;
   }
 }

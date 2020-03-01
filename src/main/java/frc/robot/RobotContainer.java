@@ -60,7 +60,6 @@ public class RobotContainer {
   TurnToTarget turnToTarget = new TurnToTarget(driveTrain);
   private NetworkTableEntry shooterSpeedDisplay;
 
-
   private NetworkTableEntry shooterSpeedSlider, cerealizerSpeedSlider, intakeRollerSlider;
 
   public double getValueOfLeftY() {
@@ -121,51 +120,36 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // pneumatics
+    new JoystickButton(joystickRight, 11).whenPressed(new InstantCommand(() -> compressor.start()));
+    new JoystickButton(joystickRight, 10).whenPressed(new InstantCommand(() -> compressor.stop()));
+
+    // shooter
     new JoystickButton(joystickRight, 2).whileHeld(new TurnToTarget(driveTrain));
-    new JoystickButton(joystickRight, 11).whenPressed(new InstantCommand (()->compressor.start()));
-    new JoystickButton(joystickRight, 10).whenPressed(new InstantCommand (()->compressor.stop()));
+    new JoystickButton(joystickLeft, 1).whenPressed(new MoveHood(shooter, HoodPosition.UP));
+    new JoystickButton(joystickLeft, 2).whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
+    new JoystickButton(joystickRight, 3)
+        .whenPressed(new ConditionalStartCommand(new EnterShooterMode(cerealizer, shooter, driveTrain),
+            new ExitShooterMode(driveTrain, shooter), () -> shooter.getTargetFlywheelVelocity() == 0));
+    new JoystickButton(joystickRight, 12).toggleWhenPressed(new ShootBall(shooter, cerealizer));
 
-    new JoystickButton(joystickLeft, 5).whenPressed(new
-      InstantCommand(intake::intakeDown, intake));
-     new JoystickButton(joystickLeft, 3).whenPressed(new
-     InstantCommand(intake::intakeUp, intake));
-
-    new JoystickButton(joystickLeft, 3)
-        .whileHeld(new RunCommand(() -> cerealizer.setSpeedCerealizer(getSpeedForCerealizer()), cerealizer));
-    new JoystickButton(joystickRight, 5)
-        .whileHeld(new RunCommand(() -> cerealizer.setSpeedCerealizer(-getSpeedForCerealizer()), cerealizer));
-    new JoystickButton(joystickRight, 7)
-        .toggleWhenPressed(new SequentialCommandGroup(new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE),
-            new IntakeBall(intake, cerealizer), new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE)));
-
-    new JoystickButton(joystickRight, 4)
-        .whileHeld(new SpinCerealizer(cerealizer, Cerealizer.Mode.INTAKE));
-
-    new JoystickButton(joystickRight, 6)
-        .whileHeld(new SpinCerealizer(cerealizer, Cerealizer.Mode.SHOOTER));
-
+    // intake
+    new JoystickButton(joystickLeft, 5).whenPressed(new InstantCommand(intake::intakeDown, intake));
+    new JoystickButton(joystickLeft, 3).whenPressed(new InstantCommand(intake::intakeUp, intake));
+    new JoystickButton(joystickLeft, 4).whileHeld(new IntakeBall(intake, cerealizer));
     new JoystickButton(joystickRight, 8)
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
     new JoystickButton(joystickRight, 9)
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(-getSpeedForIntake()), intake));
-    new JoystickButton(joystickLeft, 1)
-        .whenPressed(new MoveHood(shooter, HoodPosition.UP));
-    new JoystickButton(joystickLeft, 2)
-        .whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
-    new JoystickButton(joystickRight, 3)
-        .whenPressed(new ConditionalStartCommand(new EnterShooterMode(cerealizer, shooter, driveTrain), 
-        new ExitShooterMode(driveTrain, shooter),() -> shooter.getTargetFlywheelVelocity() == 0 ));
-    new JoystickButton(joystickRight, 12)
-        .whenPressed(new ShootBall(shooter, cerealizer));
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  /*
-   * public Command getAutonomousCommand() { // An ExampleCommand will run in
-   * autonomous return m_autoCommand; }
-   */
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    /*
+     * public Command getAutonomousCommand() { // An ExampleCommand will run in
+     * autonomous return m_autoCommand; }
+     */
   }
 }
