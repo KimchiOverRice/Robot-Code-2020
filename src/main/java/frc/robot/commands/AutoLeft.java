@@ -43,27 +43,15 @@ public class AutoLeft extends SequentialCommandGroup {
     this.shooter = shooter;
     this.cerealizer = cerealizer;
     this.intake = intake;
-    
+
     addRequirements(driveTrain);
     addRequirements(shooter);
     addRequirements(cerealizer);
     addRequirements(intake);
-    String trajectoryJSON = "paths/leftauto.wpilib.json";
-    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-    Trajectory trajectory;
-    try {
-      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      addCommands(new InstantCommand(()-> intake.intakeDown()), parallel(new RamseteCommand(trajectory, driveTrain::getRobotPosition,new RamseteController(),
-      new SimpleMotorFeedforward(0.22,1.98,0.2),driveTrain.getKinematics(),driveTrain::getWheelSpeeds,
-      new PIDController(0.01, 0, 0),
-      new PIDController(0.01, 0, 0),
-      // RamseteCommand passes volts to the callback
-      driveTrain::setVoltage,driveTrain), new IntakeBall(intake,cerealizer)));
-    addCommands(new AlignShooter(shooter, driveTrain), new ShootBall(shooter, cerealizer));
 
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+      addCommands(new InstantCommand(() -> intake.intakeDown()),
+          parallel(new Ramsete(driveTrain, "paths/leftauto.wpilib.json"), new IntakeBall(intake, cerealizer)));
+      addCommands(new AlignShooter(shooter, driveTrain), new ShootBall(shooter, cerealizer));
+
   }
 }

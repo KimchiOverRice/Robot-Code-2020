@@ -19,6 +19,8 @@ import frc.robot.commands.MoveHood;
 import frc.robot.commands.ShootBall;
 import frc.robot.commands.AlignShooter;
 import frc.robot.commands.ApproachTarget;
+import frc.robot.commands.AutoLeft;
+import frc.robot.commands.AutoRight;
 import frc.robot.commands.ExitShooterMode;
 import frc.robot.commands.SpinCerealizer;
 import frc.robot.commands.EnterShooterMode;
@@ -30,6 +32,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -39,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -82,6 +86,12 @@ public class RobotContainer {
     return intakeRollerSlider.getDouble(0);
   }
 
+  enum AutoStrategy{
+    LEFT, RIGHT, MIDDLE;
+  }
+  
+  SendableChooser<AutoStrategy> autoStrategy = new SendableChooser<>();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -107,6 +117,11 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+
+    autoStrategy.setDefaultOption("Right", AutoStrategy.RIGHT);
+    autoStrategy.addOption("Left", AutoStrategy.LEFT);
+    autoStrategy.addOption("Middle", AutoStrategy.MIDDLE);
   }
 
   public void setShooterSpeedDisplay(double speed) {
@@ -141,15 +156,27 @@ public class RobotContainer {
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
     new JoystickButton(joystickRight, 9)
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(-getSpeedForIntake()), intake));
+  }
 
+  
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
-    /*
-     * public Command getAutonomousCommand() { // An ExampleCommand will run in
-     * autonomous return m_autoCommand; }
-     */
-  }
+    
+    public Command getAutonomousCommand() { 
+
+      if(autoStrategy.getSelected() == AutoStrategy.RIGHT){
+        return new AutoRight(driveTrain,shooter, cerealizer, intake);
+      }
+      else //if(autoStrategy.getSelected() == AutoStrategy.LEFT)
+      {
+        return new AutoLeft(driveTrain,shooter, cerealizer, intake);
+      }
+      // else{
+      //   return new AutoMiddle(driveTrain,shooter, cerealizer, intake);
+      // }
+    }
+     
 }
