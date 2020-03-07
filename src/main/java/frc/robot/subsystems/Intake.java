@@ -24,8 +24,8 @@ public class Intake extends SubsystemBase {
    * Creates a new Intake.
    */
   
-  final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.intakeLeft1, Constants.intakeLeft2);
-  final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.intakeRight1,Constants.intakeRight2);
+  final DoubleSolenoid Solenoid = new DoubleSolenoid(Constants.intake1, Constants.intake2);
+
   final CANSparkMax roller = new CANSparkMax(Constants.rollers, MotorType.kBrushless);
   final DigitalInput breakBeamBallMiddle = new DigitalInput(Constants.breakBeamBallMiddle);
  
@@ -36,13 +36,13 @@ public class Intake extends SubsystemBase {
   }
 
   public void intakeDown() {
-    leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-    rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+    Solenoid.set(DoubleSolenoid.Value.kReverse);
+  
   }
 
   public void intakeUp(){
-    leftSolenoid.set(DoubleSolenoid.Value.kForward);
-    rightSolenoid.set(DoubleSolenoid.Value.kForward);
+    Solenoid.set(DoubleSolenoid.Value.kForward);
+  
   }
   
   public void setRollerSpeed(double speed){

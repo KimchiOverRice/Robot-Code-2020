@@ -36,20 +36,17 @@ public final class Constants {
     public static int backRight = 6; 
 
     //intake
-    public static int intakeLeft1 = 4;
-    public static int intakeLeft2 = 5;
-    public static int intakeRight1 = 6;
-    public static int intakeRight2 = 7;
+    public static int intake1 = 2;
+    public static int intake2 = 3;
     public static int rollers = 7;
 
 
     //shooter
     public static int flywheelleft = 11; //11
     public static int flywheelRight = 12;
-    public static int leftSolenoidP1 = 0;
-    public static int leftSolenoidP2 = 1;
-    public static int rightSolenoidP1 = 2;
-    public static int rightSolenoidP2 = 3;
+    public static int SolenoidP1 = 0;
+    public static int SolenoidP2 = 1;
+
     public static int compressor = 0;
 
     //cerealizer
