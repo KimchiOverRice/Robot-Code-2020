@@ -37,8 +37,8 @@ public final class Constants {
 
     //intake
     public static int intakeLeft1 = 4;
-    public static int intakeLeft2 = 6;
-    public static int intakeRight1 = 5;
+    public static int intakeLeft2 = 5;
+    public static int intakeRight1 = 6;
     public static int intakeRight2 = 7;
     public static int rollers = 7;
 

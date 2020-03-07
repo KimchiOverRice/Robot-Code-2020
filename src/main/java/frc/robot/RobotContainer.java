@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.IntakeBall;
@@ -20,6 +21,7 @@ import frc.robot.commands.ShootBall;
 import frc.robot.commands.AlignShooter;
 import frc.robot.commands.ApproachTarget;
 import frc.robot.commands.AutoLeft;
+import frc.robot.commands.AutoMiddle;
 import frc.robot.commands.AutoRight;
 import frc.robot.commands.ExitShooterMode;
 import frc.robot.commands.SpinCerealizer;
@@ -60,6 +62,46 @@ public class RobotContainer {
   final Cerealizer cerealizer = new Cerealizer();
   Joystick joystickLeft = new Joystick(1);
   Joystick joystickRight = new Joystick(2);
+
+  Joystick xBox = new Joystick(0);
+  Joystick leftStick = new Joystick(1);
+  Joystick rightStick = new Joystick(2);
+
+  public JoystickButton aButton = new JoystickButton(xBox, 1);
+  public JoystickButton bButton = new JoystickButton(xBox, 2);
+  public JoystickButton xButton = new JoystickButton(xBox, 3);
+  public JoystickButton yButton = new JoystickButton(xBox, 4);
+  public JoystickButton leftBumperButton = new JoystickButton(xBox, 5);
+  public JoystickButton rightBumperButton = new JoystickButton(xBox, 6);
+  public JoystickButton backButton = new JoystickButton(xBox, 7);
+  public JoystickButton startButton = new JoystickButton(xBox, 8);
+  public XBoxTrigger leftTrigger = new XBoxTrigger(xBox, 2);
+  public XBoxTrigger rightTrigger = new XBoxTrigger(xBox, 3);
+
+  public double leftStickY() {
+    return -leftStick.getRawAxis(1);
+  }
+
+  public double rightStickY() {
+    return -rightStick.getRawAxis(1);
+  }
+
+  public double xBoxLeftStickY() {
+    return xBox.getRawAxis(1);
+  }
+
+  public double xBoxLeftStickX() {
+    return xBox.getRawAxis(0);
+  }
+
+  public double xBoxRightStickY() {
+    return xBox.getRawAxis(5);
+  }
+
+  public double xBoxRightStickX() {
+    return xBox.getRawAxis(4);
+  }
+
   // JoystickButton joystickbuttonRight = new JoystickButton(joystickRight, 2);
   TurnToTarget turnToTarget = new TurnToTarget(driveTrain);
   private NetworkTableEntry shooterSpeedDisplay;
@@ -86,10 +128,10 @@ public class RobotContainer {
     return intakeRollerSlider.getDouble(0);
   }
 
-  enum AutoStrategy{
+  enum AutoStrategy {
     LEFT, RIGHT, MIDDLE;
   }
-  
+
   SendableChooser<AutoStrategy> autoStrategy = new SendableChooser<>();
 
   /**
@@ -118,7 +160,6 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-
     autoStrategy.setDefaultOption("Right", AutoStrategy.RIGHT);
     autoStrategy.addOption("Left", AutoStrategy.LEFT);
     autoStrategy.addOption("Middle", AutoStrategy.MIDDLE);
@@ -140,43 +181,42 @@ public class RobotContainer {
     new JoystickButton(joystickRight, 10).whenPressed(new InstantCommand(() -> compressor.stop()));
 
     // shooter
-    new JoystickButton(joystickRight, 2).whileHeld(new TurnToTarget(driveTrain));
-    new JoystickButton(joystickLeft, 1).whenPressed(new MoveHood(shooter, HoodPosition.UP));
+    // new JoystickButton(joystickLeft, 2).whileHeld(new TurnToTarget(driveTrain));
+    // new JoystickButton(joystickLeft, 1).whenPressed(new MoveHood(shooter,
+    // HoodPosition.UP));
     new JoystickButton(joystickLeft, 2).whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
-    new JoystickButton(joystickRight, 3)
-        .whenPressed(new ConditionalStartCommand(new EnterShooterMode(cerealizer, shooter, driveTrain),
-            new ExitShooterMode(driveTrain, shooter), () -> shooter.getTargetFlywheelVelocity() == 0));
-    new JoystickButton(joystickRight, 12).toggleWhenPressed(new ShootBall(shooter, cerealizer));
+
+    leftTrigger.whenPressed(new ConditionalStartCommand(new EnterShooterMode(cerealizer, shooter, driveTrain),
+        new ExitShooterMode(driveTrain, shooter), () -> shooter.getTargetFlywheelVelocity() == 0));
+
+  //  new JoystickButton(joystickRight, 12).toggleWhenPressed(new ShootBall(shooter, cerealizer));
 
     // intake
-    new JoystickButton(joystickLeft, 5).whenPressed(new InstantCommand(intake::intakeDown, intake));
+    new JoystickButton(joystickLeft, 5).whenPressed(new InstantCommand(intake::intakeDown, intake)); // rightJoystick
     new JoystickButton(joystickLeft, 3).whenPressed(new InstantCommand(intake::intakeUp, intake));
-    new JoystickButton(joystickLeft, 4).whileHeld(new IntakeBall(intake, cerealizer));
-    new JoystickButton(joystickRight, 8)
-        .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
-    new JoystickButton(joystickRight, 9)
+
+    rightTrigger.whileHeld(new IntakeBall(intake, cerealizer));
+   // new JoystickButton(joystickRight, 8)
+       // .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
+    rightBumperButton
         .whileHeld(new RunCommand(() -> intake.setRollerSpeed(-getSpeedForIntake()), intake));
   }
 
-  
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    
-    public Command getAutonomousCommand() { 
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
 
-      if(autoStrategy.getSelected() == AutoStrategy.RIGHT){
-        return new AutoRight(driveTrain,shooter, cerealizer, intake);
-      }
-      else //if(autoStrategy.getSelected() == AutoStrategy.LEFT)
-      {
-        return new AutoLeft(driveTrain,shooter, cerealizer, intake);
-      }
-      // else{
-      //   return new AutoMiddle(driveTrain,shooter, cerealizer, intake);
-      // }
+  public Command getAutonomousCommand() {
+
+    if (autoStrategy.getSelected() == AutoStrategy.RIGHT) {
+      return new AutoRight(driveTrain, shooter, cerealizer, intake);
+    } else if (autoStrategy.getSelected() == AutoStrategy.LEFT) {
+      return new AutoLeft(driveTrain, shooter, cerealizer, intake);
+    } else {
+      return new AutoMiddle(driveTrain, shooter, cerealizer, intake);
     }
-     
+  }
+
 }
