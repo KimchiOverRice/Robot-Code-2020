@@ -27,8 +27,8 @@ import frc.robot.Limelight;
 public class Shooter extends SubsystemBase {
   final CANSparkMax flywheelLeft = new CANSparkMax(Constants.flywheelleft, MotorType.kBrushless);
   final CANSparkMax flywheelRight = new CANSparkMax(Constants.flywheelRight, MotorType.kBrushless);
-  final DoubleSolenoid leftSolenoid = new DoubleSolenoid(Constants.leftSolenoidP1,Constants.leftSolenoidP2);
-  final DoubleSolenoid rightSolenoid = new DoubleSolenoid(Constants.rightSolenoidP1,Constants.rightSolenoidP2);
+  final DoubleSolenoid Solenoid = new DoubleSolenoid(Constants.SolenoidP1,Constants.SolenoidP2);
+  
   
   public enum HoodPosition { UP , DOWN };
 
@@ -97,13 +97,13 @@ public class Shooter extends SubsystemBase {
   }
 
   public void hoodDown() {
-    leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-    rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+    Solenoid.set(DoubleSolenoid.Value.kReverse);
+   
   }
 
   public void hoodUp(){
-    leftSolenoid.set(DoubleSolenoid.Value.kForward);
-    rightSolenoid.set(DoubleSolenoid.Value.kForward);
+    Solenoid.set(DoubleSolenoid.Value.kForward);
+ 
   }
 
   // public void compress(){

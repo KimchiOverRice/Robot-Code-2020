@@ -70,12 +70,19 @@ public class RobotContainer {
     return -joystickLeft.getY();
   }
 
+  public void startCompressor(){
+    compressor.start();
+  }
+
   public double getValueOfRightY() {
     return -joystickRight.getY();
   }
 
   public double getSpeedFromSlider() {
-    return shooterSpeedSlider.getDouble(0.5);
+    double spped = shooterSpeedSlider.getDouble(0.5);
+    System.out.println(spped);
+    return spped;
+    
   }
 
   public double getSpeedForCerealizer() {
@@ -113,7 +120,8 @@ public class RobotContainer {
 
     intake.setDefaultCommand(new RunCommand(() -> intake.setRollerSpeed(0), intake));
 
-    shooter.setDefaultCommand(new RunCommand(() -> shooter.flywheelPIDToTargetVelocity(), shooter));
+    //shooter.setDefaultCommand(new RunCommand(() -> shooter.flywheelPIDToTargetVelocity(), shooter));
+    shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
 
     // Configure the button bindings
     configureButtonBindings();
