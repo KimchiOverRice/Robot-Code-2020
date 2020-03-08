@@ -7,7 +7,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Limelight;
+import frc.robot.Limelight.LightMode;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 
@@ -20,7 +23,7 @@ public class AlignShooter extends SequentialCommandGroup {
    */
   
   public AlignShooter(Shooter shooter, DriveTrain driveTrain) {
-    super(new ApproachTarget(shooter, driveTrain), new TurnToTarget(driveTrain));
+    super(new InstantCommand(() -> Limelight.setLedMode(LightMode.eOn)), new ApproachTarget(shooter, driveTrain), new TurnToTarget(driveTrain));
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     // super(new ShootBall(shooter), new  );

@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+    Limelight.setLedMode(LightMode.eOff);
   }
 
   /**
@@ -86,7 +87,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    robotContainer.startCompressor();
+    //robotContainer.startCompressor();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

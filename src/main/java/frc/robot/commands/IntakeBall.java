@@ -37,7 +37,7 @@ public class IntakeBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.setRollerSpeed(0.5);
+    intake.setRollerSpeed(1);
     cerealizer.setSpeedCerealizer(0.2);
   }
 

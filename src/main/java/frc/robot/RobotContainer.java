@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.IntakeBall;
 import frc.robot.commands.MoveHood;
 import frc.robot.commands.ShootBall;
+import frc.robot.Limelight.LightMode;
 import frc.robot.commands.AlignShooter;
 import frc.robot.commands.ApproachTarget;
 import frc.robot.commands.AutoLeft;
@@ -121,9 +122,7 @@ public class RobotContainer {
   }
 
   public double getSpeedFromSlider() {
-    double spped = shooterSpeedSlider.getDouble(0.5);
-    System.out.println(spped);
-    return spped;
+    return shooterSpeedSlider.getDouble(0.5);
     
   }
 
@@ -165,6 +164,8 @@ public class RobotContainer {
     //shooter.setDefaultCommand(new RunCommand(() -> shooter.flywheelPIDToTargetVelocity(), shooter));
     shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
 
+    
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -190,9 +191,8 @@ public class RobotContainer {
 
     // shooter
     // new JoystickButton(joystickLeft, 2).whileHeld(new TurnToTarget(driveTrain));
-    // new JoystickButton(joystickLeft, 1).whenPressed(new MoveHood(shooter,
-    // HoodPosition.UP));
-    new JoystickButton(joystickLeft, 2).whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
+    new JoystickButton(joystickLeft, 12).whenPressed(new MoveHood(shooter, HoodPosition.UP));
+    new JoystickButton(joystickLeft, 11).whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
 
     leftTrigger.whenPressed(new ConditionalStartCommand(new EnterShooterMode(cerealizer, shooter, driveTrain),
         new ExitShooterMode(driveTrain, shooter), () -> shooter.getTargetFlywheelVelocity() == 0));
@@ -200,10 +200,11 @@ public class RobotContainer {
   //  new JoystickButton(joystickRight, 12).toggleWhenPressed(new ShootBall(shooter, cerealizer));
 
     // intake
-    new JoystickButton(joystickLeft, 5).whenPressed(new InstantCommand(intake::intakeDown, intake)); // rightJoystick
-    new JoystickButton(joystickLeft, 3).whenPressed(new InstantCommand(intake::intakeUp, intake));
+    new JoystickButton(joystickLeft, 3).whenPressed(new InstantCommand(intake::intakeDown, intake)); // rightJoystick
+    new JoystickButton(joystickLeft, 5).whenPressed(new InstantCommand(intake::intakeUp, intake));
 
     rightTrigger.whileHeld(new IntakeBall(intake, cerealizer));
+    new JoystickButton(joystickLeft, 1).whileHeld(new IntakeBall(intake, cerealizer));
    // new JoystickButton(joystickRight, 8)
        // .whileHeld(new RunCommand(() -> intake.setRollerSpeed(getSpeedForIntake()), intake));
     rightBumperButton
