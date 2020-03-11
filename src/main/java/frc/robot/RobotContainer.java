@@ -116,6 +116,10 @@ public class RobotContainer {
     compressor.start();
   }
 
+  public void stopCompressor(){
+    compressor.stop();
+  }
+
   public double getValueOfRightY() {
     return -joystickRight.getY();
   }
@@ -161,8 +165,8 @@ public class RobotContainer {
 
     intake.setDefaultCommand(new RunCommand(() -> intake.setRollerSpeed(0), intake));
 
-    //shooter.setDefaultCommand(new RunCommand(() -> shooter.flywheelPIDToTargetVelocity(), shooter));
-    shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
+    shooter.setDefaultCommand(new RunCommand(() -> shooter.flywheelPIDToTargetVelocity(), shooter));
+    //shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
 
     
 

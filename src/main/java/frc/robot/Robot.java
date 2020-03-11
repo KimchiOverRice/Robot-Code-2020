@@ -103,6 +103,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    robotContainer.stopCompressor();
     SmartDashboard.putNumber("tx", Limelight.getTx());
    
   }

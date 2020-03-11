@@ -41,7 +41,7 @@ public class Shooter extends SubsystemBase {
   NetworkTableEntry rpmDisplay, leftCurrent, rightCurrent, leftVoltage, rightVoltage, velocity, targetVelocity;
 
   public Shooter() {
-    flywheelTargetVelocity = 0;
+    flywheelTargetVelocity = 1000;
 
     flywheelLeft.restoreFactoryDefaults();
     flywheelRight.restoreFactoryDefaults();
@@ -54,18 +54,18 @@ public class Shooter extends SubsystemBase {
     targetVelocity = Shuffleboard.getTab("Testing").add("Flywheel Target Velocity", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
     flyWheelPIDController = flywheelLeft.getPIDController();
-    flyWheelPIDController.setP(0.0001);
-    flyWheelPIDController.setI(0.00000001);
-    flyWheelPIDController.setD(0.001);
+    flyWheelPIDController.setP(0.001);
+    flyWheelPIDController.setI(0.0000003);
+    flyWheelPIDController.setD(0.005);
 
     flywheelLeft.setSmartCurrentLimit(35);
     flywheelRight.setSmartCurrentLimit(35);
 
     flywheelLeft.setOpenLoopRampRate(1);
-    flywheelLeft.setClosedLoopRampRate(1);
+    //flywheelLeft.setClosedLoopRampRate(1);
 
     flywheelRight.setOpenLoopRampRate(1);
-    flywheelRight.setClosedLoopRampRate(1);
+    //flywheelRight.setClosedLoopRampRate(1);
 
 
     //testMotor.enableVoltageCompensation(12);
