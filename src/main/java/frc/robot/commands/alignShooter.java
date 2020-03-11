@@ -22,8 +22,8 @@ public class AlignShooter extends SequentialCommandGroup {
    * Creates a new alignShooter.
    */
   
-  public AlignShooter(Shooter shooter, DriveTrain driveTrain) {
-    super(new InstantCommand(() -> Limelight.setLedMode(LightMode.eOn)), new ApproachTarget(shooter, driveTrain), new TurnToTarget(driveTrain));
+  public AlignShooter(Shooter shooter, DriveTrain driveTrain, Compressor compressor) {
+    super(new InstantCommand(() -> compressor.stop()), new InstantCommand(() -> Limelight.setLedMode(LightMode.eOn)), new ApproachTarget(shooter, driveTrain), new TurnToTarget(driveTrain));
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     // super(new ShootBall(shooter), new  );

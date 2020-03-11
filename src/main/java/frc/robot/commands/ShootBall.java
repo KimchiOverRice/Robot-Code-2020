@@ -7,6 +7,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -23,11 +25,11 @@ public class ShootBall extends SequentialCommandGroup {
    * Creates a new ShootBall.
    */
 
-  public ShootBall(Shooter shooter, Cerealizer cerealizer) {
+  public ShootBall(Shooter shooter, Cerealizer cerealizer, Compressor compressor) {
 
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new WaitForShooterReady(shooter), parallel(new SpinCerealizer(cerealizer),
+    super(new InstantCommand(() -> compressor.stop()), new WaitForShooterReady(shooter), parallel(new SpinCerealizer(cerealizer),
         new StartEndCommand(() -> cerealizer.startEjectMotor(), () -> cerealizer.stopEjectMotor())).withTimeout(5));
     // new SendBallToShooter(3, cerealizer)
   }
