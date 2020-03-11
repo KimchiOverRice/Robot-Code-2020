@@ -11,9 +11,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  */
 public class Limelight {
 	private static NetworkTableInstance table = null;
-	public static final double MOUNT_HEIGHT = 23/12;
-	public static final double MOUNT_ANGLE = 0;
-	public static final double FIELD_TARGET_HEIGHT = 47.75/12; //98.5/12
+	public static final double MOUNT_HEIGHT = 18.5/12;
+	public static final double MOUNT_ANGLE = 25;
+	public static final double FIELD_TARGET_HEIGHT = 90.5/12; //89.75
 	/**
 	 * Light modes for Limelight.
 	 * 
@@ -33,7 +33,7 @@ public class Limelight {
 	}
 
 	public static double getDistToTarget(){
-		return (FIELD_TARGET_HEIGHT - MOUNT_HEIGHT) /Math.tan(Math.toRadians(getTy() + MOUNT_ANGLE));
+		return (FIELD_TARGET_HEIGHT - MOUNT_HEIGHT) /Math.tan(Math.toRadians(getTy() + MOUNT_ANGLE))-1.5; // limelight mounted 1.5 feet from front of robot
   	}
 	/**
 	 * Gets whether a target is detected by the Limelight.
