@@ -61,7 +61,6 @@ public class RobotContainer {
   Joystick joystickLeft = new Joystick(1);
   Joystick joystickRight = new Joystick(2);
   // JoystickButton joystickbuttonRight = new JoystickButton(joystickRight, 2);
-  TurnToTarget turnToTarget = new TurnToTarget(driveTrain);
   private NetworkTableEntry shooterSpeedDisplay;
 
   private NetworkTableEntry shooterSpeedSlider, cerealizerSpeedSlider, intakeRollerSlider;
@@ -116,7 +115,8 @@ public class RobotContainer {
     driveTrain.setDefaultCommand(
         new RunCommand(() -> driveTrain.setSpeed(getValueOfLeftY(), getValueOfRightY()), driveTrain));
 
-    cerealizer.setDefaultCommand(new RunCommand(() -> cerealizer.setSpeedCerealizer(0), cerealizer));
+    //cerealizer.setDefaultCommand(new RunCommand(() -> cerealizer.setSpeedCerealizer(0), cerealizer));
+    cerealizer.setDefaultCommand(new RunCommand(() -> cerealizer.setSpeedCerealizer(getSpeedForCerealizer()), cerealizer));
 
     intake.setDefaultCommand(new RunCommand(() -> intake.setRollerSpeed(0), intake));
 
@@ -148,7 +148,7 @@ public class RobotContainer {
     new JoystickButton(joystickRight, 10).whenPressed(new InstantCommand(() -> compressor.stop()));
 
     // shooter
-    new JoystickButton(joystickRight, 2).whileHeld(new TurnToTarget(driveTrain));
+    //new JoystickButton(joystickRight, 2).whileHeld(new TurnToTarget(driveTrain));
     new JoystickButton(joystickLeft, 1).whenPressed(new MoveHood(shooter, HoodPosition.UP));
     new JoystickButton(joystickLeft, 2).whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
     new JoystickButton(joystickRight, 3)
