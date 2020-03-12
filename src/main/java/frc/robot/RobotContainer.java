@@ -165,8 +165,8 @@ public class RobotContainer {
 
     intake.setDefaultCommand(new RunCommand(() -> intake.setRollerSpeed(0), intake));
 
-    shooter.setDefaultCommand(new RunCommand(() -> shooter.flywheelPIDToTargetVelocity(), shooter));
-    //shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
+  //  shooter.setDefaultCommand(new RunCommand(() -> shooter.flywheelPIDToTargetVelocity(), shooter));
+    shooter.setDefaultCommand(new RunCommand(() -> shooter.setSpeed(getSpeedFromSlider()), shooter));
 
     
 
@@ -198,8 +198,8 @@ public class RobotContainer {
     new JoystickButton(joystickLeft, 12).whenPressed(new MoveHood(shooter, HoodPosition.UP));
     new JoystickButton(joystickLeft, 11).whenPressed(new MoveHood(shooter, HoodPosition.DOWN));
 
-    leftTrigger.whenPressed(new ConditionalStartCommand(new EnterShooterMode(cerealizer, shooter, driveTrain),
-        new ExitShooterMode(driveTrain, shooter), () -> shooter.getTargetFlywheelVelocity() == 0));
+    leftTrigger.whenPressed(new ConditionalStartCommand(new EnterShooterMode(cerealizer, shooter, driveTrain, compressor),
+        new ExitShooterMode(driveTrain, shooter, compressor), () -> shooter.getTargetFlywheelVelocity() == 0));
 
   //  new JoystickButton(joystickRight, 12).toggleWhenPressed(new ShootBall(shooter, cerealizer));
 
@@ -226,7 +226,7 @@ public class RobotContainer {
     if (autoStrategy.getSelected() == AutoStrategy.RIGHT) {
       return new AutoRight(driveTrain, shooter, cerealizer, intake);
     } else if (autoStrategy.getSelected() == AutoStrategy.LEFT) {
-      return new AutoLeft(driveTrain, shooter, cerealizer, intake);
+      return new AutoLeft(driveTrain, shooter, cerealizer, intake, compressor);
     } else {
       return new AutoMiddle(driveTrain, shooter, cerealizer, intake);
     }

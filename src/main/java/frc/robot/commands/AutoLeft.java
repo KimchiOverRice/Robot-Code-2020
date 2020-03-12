@@ -10,6 +10,7 @@ package frc.robot.commands;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -36,7 +37,7 @@ public class AutoLeft extends SequentialCommandGroup {
   Shooter shooter;
   Intake intake;
 
-  public AutoLeft(DriveTrain driveTrain, Shooter shooter, Cerealizer cerealizer, Intake intake) {
+  public AutoLeft(DriveTrain driveTrain, Shooter shooter, Cerealizer cerealizer, Intake intake, Compressor compressor) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     this.driveTrain = driveTrain;
@@ -50,8 +51,8 @@ public class AutoLeft extends SequentialCommandGroup {
     addRequirements(intake);
 
       addCommands(new InstantCommand(() -> intake.intakeDown()),
-          parallel(new Ramsete(driveTrain, "paths/leftauto.wpilib.json"), new IntakeBall(intake, cerealizer)));
-      addCommands(new AlignShooter(shooter, driveTrain), new ShootBall(shooter, cerealizer));
+          parallel(new Ramsete(driveTrain, "paths/leftauto.wpilib.json"), new IntakeBall(intake, cerealizer)),
+          new EnterShooterMode(cerealizer, shooter, driveTrain, compressor), new WaitForShooterReady(shooter), new ShootBall(shooter, cerealizer).withTimeout(5), new ExitShooterMode(driveTrain,shooter,compressor));
 
   }
 }

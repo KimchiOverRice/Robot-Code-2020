@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Limelight;
 import frc.robot.Limelight.LightMode;
@@ -19,12 +20,14 @@ public class ExitShooterMode extends CommandBase {
    */
   private DriveTrain driveTrain;
   private Shooter shooter;
-  public ExitShooterMode(DriveTrain driveTrain, Shooter shooter) {
+  private Compressor compressor;
+  public ExitShooterMode(DriveTrain driveTrain, Shooter shooter, Compressor compressor) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
     addRequirements(driveTrain);
     this.driveTrain = driveTrain;
     this.shooter = shooter;
+    this.compressor = compressor;
   }
 
   // Called when the command is initially scheduled.
@@ -32,6 +35,7 @@ public class ExitShooterMode extends CommandBase {
   public void initialize() {
     shooter.stopFlywheel();
     driveTrain.stopDrivetrain();
+    compressor.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

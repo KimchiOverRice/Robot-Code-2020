@@ -7,7 +7,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Cerealizer;
 import frc.robot.subsystems.DriveTrain;
@@ -22,8 +24,8 @@ public class EnterShooterMode extends ParallelCommandGroup {
    * Creates a new ToggleShooterMode.
    */
   Shooter shooter;
-  public EnterShooterMode(Cerealizer cerealizer, Shooter shooter, DriveTrain driveTrain) {
-    super(new AlignShooter(shooter, driveTrain), new SpinCerealizer(cerealizer));
+  public EnterShooterMode(Cerealizer cerealizer, Shooter shooter, DriveTrain driveTrain, Compressor compressor) {
+    super(new InstantCommand(() -> compressor.stop()), new AlignShooter(shooter, driveTrain), new SpinCerealizer(cerealizer));
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());super();
 

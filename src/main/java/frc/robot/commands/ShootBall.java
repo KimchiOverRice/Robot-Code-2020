@@ -25,13 +25,12 @@ public class ShootBall extends SequentialCommandGroup {
    * Creates a new ShootBall.
    */
 
-  public ShootBall(Shooter shooter, Cerealizer cerealizer, Compressor compressor) {
+  public ShootBall(Shooter shooter, Cerealizer cerealizer) {
 
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new InstantCommand(() -> compressor.stop()), new WaitForShooterReady(shooter), parallel(new SpinCerealizer(cerealizer),
-        new StartEndCommand(() -> cerealizer.startEjectMotor(), () -> cerealizer.stopEjectMotor())).withTimeout(5));
-    // new SendBallToShooter(3, cerealizer)
+    super(new WaitForShooterReady(shooter), parallel(new SpinCerealizer(cerealizer),
+        new StartEndCommand(() -> cerealizer.startEjectMotor(), () -> cerealizer.stopEjectMotor())));
   }
 }
 // new RunCommand(()->cerealizer.startEjectMotor(), cerealizer).withTimeout(5)
